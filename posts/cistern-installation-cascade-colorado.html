@@ -24,4 +24,28 @@
 <p>Ready to take the next step towards a reliable water supply? We offer free estimates for our cistern installation services in Cascade! Contact us today to discuss your needs and receive a personalized quote. Our friendly team is here to answer any questions you may have and guide you through the installation process. Don’t wait—secure your water supply with our expert cistern solutions! Call us now or fill out our online form to get started!</p>
 ```<div class="cta-box"><h3>Get a Free Quote</h3><p>📞 <a href="tel:(719) 246-1501">(719) 246-1501</a></p><a href="https://trilakes.co/get-a-quote" class="cta-button">Request Quote</a></div></div></article></div></main>
     <footer class="site-footer"><div class="container"><p>&copy; 2026 Tri-Lakes Contracting.</p></div></footer>
+
+    <!-- Visitor Tracking -->
+    <script>
+        (function(){
+            try {
+                var data = {
+                    page: window.location.pathname,
+                    title: document.title,
+                    referrer: document.referrer,
+                    screen: window.screen.width + 'x' + window.screen.height,
+                    ts: Date.now()
+                };
+                
+                // Send tracking beacon
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon('/api/track', JSON.stringify(data));
+                } else {
+                    var img = new Image();
+                    img.src = '/api/track?page=' + encodeURIComponent(data.page);
+                }
+            } catch(e) {}
+        })();
+    </script>
+
 </body></html>

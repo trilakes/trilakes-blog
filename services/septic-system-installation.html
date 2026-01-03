@@ -105,4 +105,28 @@
         </div>
     </main>
     <footer class="site-footer"><div class="container"><p>&copy; 2026 Tri-Lakes Contracting.</p></div></footer>
+
+    <!-- Visitor Tracking -->
+    <script>
+        (function(){
+            try {
+                var data = {
+                    page: window.location.pathname,
+                    title: document.title,
+                    referrer: document.referrer,
+                    screen: window.screen.width + 'x' + window.screen.height,
+                    ts: Date.now()
+                };
+                
+                // Send tracking beacon
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon('/api/track', JSON.stringify(data));
+                } else {
+                    var img = new Image();
+                    img.src = '/api/track?page=' + encodeURIComponent(data.page);
+                }
+            } catch(e) {}
+        })();
+    </script>
+
 </body></html>

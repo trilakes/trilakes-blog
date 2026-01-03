@@ -1,1 +1,25 @@
-<html><head><title>Monolithic Dome Homes</title><link rel=stylesheet href=/blog/assets/style.css></head><body><main class=blog-main><div class=container><h1>Monolithic Dome Homes</h1><p>Coming soon</p></div></main></body></html>
+<html><head><title>Monolithic Dome Homes</title><link rel=stylesheet href=/blog/assets/style.css></head><body><main class=blog-main><div class=container><h1>Monolithic Dome Homes</h1><p>Coming soon</p></div></main>
+    <!-- Visitor Tracking -->
+    <script>
+        (function(){
+            try {
+                var data = {
+                    page: window.location.pathname,
+                    title: document.title,
+                    referrer: document.referrer,
+                    screen: window.screen.width + 'x' + window.screen.height,
+                    ts: Date.now()
+                };
+                
+                // Send tracking beacon
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon('/api/track', JSON.stringify(data));
+                } else {
+                    var img = new Image();
+                    img.src = '/api/track?page=' + encodeURIComponent(data.page);
+                }
+            } catch(e) {}
+        })();
+    </script>
+
+</body></html>
