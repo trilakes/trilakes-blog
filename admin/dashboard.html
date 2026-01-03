@@ -622,7 +622,7 @@
             <!-- Stats Grid -->
             <div class="stats-grid">
                 <div class="stat-card highlight">
-                    <div class="stat-label">Total Page Views</div>
+                    <div class="stat-label">🌐 Total Site Views (24h)</div>
                     <div class="stat-value large" id="total-views">--</div>
                     <div class="stat-change up" id="change-indicator">
                         Loading...
@@ -630,8 +630,13 @@
                 </div>
                 
                 <div class="stat-card">
-                    <div class="stat-label">Last 24 Hours</div>
-                    <div class="stat-value" id="views-24h">--</div>
+                    <div class="stat-label">📝 Blog Views (24h)</div>
+                    <div class="stat-value" id="blog-views-24h">--</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">👥 Unique Visitors</div>
+                    <div class="stat-value" id="unique-visitors">--</div>
                 </div>
                 
                 <div class="stat-card">
@@ -643,17 +648,22 @@
                     <div class="stat-label">Last 30 Days</div>
                     <div class="stat-value" id="views-30d">--</div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-label">Unique Visitors</div>
-                    <div class="stat-value" id="unique-visitors">--</div>
-                </div>
             </div>
             
-            <!-- Top Pages -->
+            <!-- All Site Pages -->
             <section class="top-pages">
                 <div class="section-header">
-                    <h2 class="section-title">🔥 Top Pages</h2>
+                    <h2 class="section-title">🌐 All Site Traffic</h2>
+                </div>
+                <div class="page-list" id="all-site-pages">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+            
+            <!-- Top Blog Pages -->
+            <section class="top-pages">
+                <div class="section-header">
+                    <h2 class="section-title">📝 Top Blog Pages</h2>
                 </div>
                 <div class="page-list" id="top-pages">
                     <!-- Populated by JS -->
@@ -663,7 +673,7 @@
             <!-- Recent Visitors -->
             <section class="recent-visitors">
                 <div class="section-header">
-                    <h2 class="section-title">👥 Recent Visitors</h2>
+                    <h2 class="section-title">👥 Visitor Log</h2>
                 </div>
                 <div class="visitor-list" id="recent-visitors">
                     <!-- Populated by JS -->
@@ -944,8 +954,8 @@
         
         function updateDashboard(data) {
             // Update stats
-            if (data.totalViews !== undefined) document.getElementById('total-views').textContent = data.totalViews.toLocaleString();
-            if (data.views24h !== undefined) document.getElementById('views-24h').textContent = data.views24h.toLocaleString();
+            if (data.views24h !== undefined) document.getElementById('total-views').textContent = data.views24h.toLocaleString();
+            if (data.blogViews24h !== undefined) document.getElementById('blog-views-24h').textContent = data.blogViews24h.toLocaleString();
             if (data.views7d !== undefined) document.getElementById('views-7d').textContent = data.views7d.toLocaleString();
             if (data.views30d !== undefined) document.getElementById('views-30d').textContent = data.views30d.toLocaleString();
             if (data.uniqueVisitors !== undefined) document.getElementById('unique-visitors').textContent = data.uniqueVisitors.toLocaleString();
@@ -956,7 +966,18 @@
             const changeEl = document.getElementById('change-indicator');
             if (changeEl) changeEl.innerHTML = '<span>📊</span> Live data from Cloudflare';
             
-            // Update top pages
+            // Update ALL site pages
+            if (data.allSitePages && data.allSitePages.length > 0) {
+                const container = document.getElementById('all-site-pages');
+                container.innerHTML = data.allSitePages.map(p => `
+                    <div class="page-item">
+                        <span class="page-name" title="${p.path}">${p.path}</span>
+                        <span class="page-views">${p.views}</span>
+                    </div>
+                `).join('');
+            }
+            
+            // Update top blog pages
             if (data.topPages && data.topPages.length > 0) {
                 const container = document.getElementById('top-pages');
                 container.innerHTML = data.topPages.map(p => `
@@ -1107,12 +1128,32 @@
             const container = document.getElementById('recent-visitors');
             if (!container) return;
             
-            container.innerHTML = visitors.slice(0, 10).map(v => `
-                <div class="visitor-item">
+            if (visitors.length === 0) {
+                container.innerHTML = `
+                    <div class="visitor-item" style="opacity: 0.5;">
+                        <span class="visitor-flag">⏳</span>
+                        <div class="visitor-info">
+                            <div class="visitor-location">Waiting for visitors...</div>
+                            <div class="visitor-page">Real visitors will appear here</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = visitors.slice(0, 15).map(v => `
+                <div class="visitor-item" style="cursor: pointer;" title="Click for details">
                     <span class="visitor-flag">${v.live ? '🟢' : '📍'}</span>
                     <div class="visitor-info">
-                        <div class="visitor-location">${v.city || 'Unknown'}${v.region ? ', ' + v.region : ''}</div>
-                        <div class="visitor-page">${v.device || 'Desktop'} • ${v.browser || 'Browser'}</div>
+                        <div class="visitor-location">
+                            <strong>${v.city || 'Unknown'}${v.region ? ', ' + v.region : ''}</strong>
+                        </div>
+                        <div class="visitor-page" style="font-size: 11px;">
+                            IP: ${v.ipMasked || v.ip || '?'} • ${v.device || 'Desktop'} • ${v.browser || '?'}
+                        </div>
+                        <div class="visitor-page" style="font-size: 10px; color: #888;">
+                            ${v.isp || ''} ${v.page ? '• ' + v.page.replace('/blog', '').substring(0, 25) : ''}
+                        </div>
                     </div>
                     <span class="visitor-time">${v.timeAgo || ''}</span>
                 </div>
