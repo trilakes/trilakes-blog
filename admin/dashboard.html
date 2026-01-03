@@ -700,18 +700,41 @@
             `).join('');
         }
         
-        function renderChart(range = '7d') {
-            const data = sampleChartData[range];
-            const maxVal = Math.max(...data);
+        function renderChart(data = null, range = '7d') {
+            let chartValues = [];
+            
+            if (data && data.chartData && data.chartData.length > 0) {
+                // Use real data
+                if (range === '7d') {
+                    chartValues = data.chartData.slice(-7).map(d => d.views);
+                } else if (range === '30d') {
+                    chartValues = data.chartData.map(d => d.views);
+                } else {
+                    // 24h - distribute last day's views across hours
+                    const lastDay = data.views24h || 0;
+                    chartValues = Array.from({length: 24}, () => Math.floor(lastDay / 24 + Math.random() * 5));
+                }
+            } else {
+                // Fallback to sample
+                const sampleChartData = {
+                    '24h': [12, 8, 5, 3, 2, 4, 6, 9, 15, 22, 28, 31, 35, 29, 24, 19, 26, 33, 38, 42, 35, 28, 18, 12],
+                    '7d': [89, 124, 98, 145, 167, 203, 178],
+                    '30d': [45, 52, 48, 61, 72, 89, 94, 102, 87, 76, 98, 112, 134, 145, 128, 119, 132, 156, 178, 189, 167, 145, 198, 212, 234, 201, 187, 176, 198, 215]
+                };
+                chartValues = sampleChartData[range];
+            }
+            
+            if (chartValues.length === 0) chartValues = [0];
+            
+            const maxVal = Math.max(...chartValues, 1);
             const container = document.getElementById('chart');
             const labels = document.getElementById('chart-labels');
             
-            container.innerHTML = data.map(val => {
+            container.innerHTML = chartValues.map(val => {
                 const height = (val / maxVal) * 100;
                 return `<div class="chart-bar" style="height: ${height}%;" data-value="${val} views"></div>`;
             }).join('');
             
-            // Generate labels based on range
             let labelText = [];
             if (range === '24h') {
                 labelText = ['12am', '6am', '12pm', '6pm', 'Now'];
@@ -726,79 +749,117 @@
             labels.innerHTML = labelText.map(l => `<span class="chart-label">${l}</span>`).join('');
         }
         
+        let currentData = null;
+        
         function setChartRange(range) {
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            renderChart(range);
+            renderChart(currentData, range);
         }
         
-        function refreshData() {
-            // In production, this would fetch from your API
-            console.log('Refreshing data...');
-            
-            // Simulate refresh animation
+        async function refreshData() {
             const btn = document.querySelector('.refresh-btn');
             btn.innerHTML = '⏳ Loading...';
             
-            setTimeout(() => {
-                btn.innerHTML = '🔄 Refresh';
-                // Re-render with potentially new data
-                renderTopPages();
-                renderRecentVisitors();
-                renderChart();
-            }, 1000);
-        }
-        
-        // ============================================
-        // REAL-TIME UPDATES (WebSocket or Polling)
-        // ============================================
-        function simulateLiveUpdates() {
-            setInterval(() => {
-                // Update live count randomly for demo
-                const liveCount = document.getElementById('live-count');
-                const current = parseInt(liveCount.textContent);
-                const change = Math.random() > 0.5 ? 1 : -1;
-                const newCount = Math.max(1, Math.min(10, current + change));
-                liveCount.textContent = newCount;
-            }, 5000);
-        }
-        
-        // ============================================
-        // API FUNCTIONS (Connect to Cloudflare Worker)
-        // ============================================
-        async function fetchAnalytics() {
             try {
-                const response = await fetch(ANALYTICS_API);
-                if (response.ok) {
-                    const data = await response.json();
-                    updateDashboard(data);
-                }
-            } catch (error) {
-                console.log('Using sample data (API not configured)');
+                await fetchAnalytics();
+                btn.innerHTML = '✅ Updated!';
+                setTimeout(() => { btn.innerHTML = '🔄 Refresh'; }, 2000);
+            } catch (e) {
+                btn.innerHTML = '❌ Error';
+                setTimeout(() => { btn.innerHTML = '🔄 Refresh'; }, 2000);
             }
         }
         
+        // ============================================
+        // REAL API CONNECTION
+        // ============================================
+        async function fetchAnalytics() {
+            try {
+                const response = await fetch('/api/analytics');
+                if (response.ok) {
+                    const data = await response.json();
+                    currentData = data;
+                    updateDashboard(data);
+                    return data;
+                }
+            } catch (error) {
+                console.log('API error, using sample data:', error);
+            }
+            return null;
+        }
+        
         function updateDashboard(data) {
-            if (data.totalViews) document.getElementById('total-views').textContent = data.totalViews.toLocaleString();
-            if (data.views24h) document.getElementById('views-24h').textContent = data.views24h.toLocaleString();
-            if (data.views7d) document.getElementById('views-7d').textContent = data.views7d.toLocaleString();
-            if (data.views30d) document.getElementById('views-30d').textContent = data.views30d.toLocaleString();
-            if (data.uniqueVisitors) document.getElementById('unique-visitors').textContent = data.uniqueVisitors.toLocaleString();
+            // Update stats
+            if (data.totalViews !== undefined) document.getElementById('total-views').textContent = data.totalViews.toLocaleString();
+            if (data.views24h !== undefined) document.getElementById('views-24h').textContent = data.views24h.toLocaleString();
+            if (data.views7d !== undefined) document.getElementById('views-7d').textContent = data.views7d.toLocaleString();
+            if (data.views30d !== undefined) document.getElementById('views-30d').textContent = data.views30d.toLocaleString();
+            if (data.uniqueVisitors !== undefined) document.getElementById('unique-visitors').textContent = data.uniqueVisitors.toLocaleString();
+            if (data.liveCount !== undefined) document.getElementById('live-count').textContent = data.liveCount;
+            if (data.views24h !== undefined) document.getElementById('today-map-count').textContent = data.views24h + ' today';
+            
+            // Update top pages
+            if (data.topPages && data.topPages.length > 0) {
+                const container = document.getElementById('top-pages');
+                container.innerHTML = data.topPages.map(p => `
+                    <div class="page-item">
+                        <span class="page-name">${p.page}</span>
+                        <span class="page-views">${p.views}</span>
+                    </div>
+                `).join('');
+            }
+            
+            // Update recent visitors
+            if (data.recentVisitors && data.recentVisitors.length > 0) {
+                const container = document.getElementById('recent-visitors');
+                container.innerHTML = data.recentVisitors.map(v => `
+                    <div class="visitor-item">
+                        <span class="visitor-flag">${v.live ? '🟢' : '📍'}</span>
+                        <div class="visitor-info">
+                            <div class="visitor-location">${v.city}, CO</div>
+                            <div class="visitor-page">${v.count} visits</div>
+                        </div>
+                        <span class="visitor-time">${v.time || ''}</span>
+                    </div>
+                `).join('');
+                
+                // Update map with real visitor locations
+                map.eachLayer(layer => {
+                    if (layer instanceof L.Marker) map.removeLayer(layer);
+                });
+                
+                data.recentVisitors.forEach(v => {
+                    const icon = v.live ? liveIcon : visitorIcon;
+                    const marker = L.marker([v.lat, v.lng], { icon }).addTo(map);
+                    marker.bindPopup(`<strong>${v.city}</strong><br>${v.count} visits`);
+                });
+            }
+            
+            // Update chart
+            renderChart(data, '7d');
+            
+            // Show note if present
+            if (data.note) {
+                console.log('Dashboard note:', data.note);
+            }
         }
         
         // ============================================
         // INITIALIZE
         // ============================================
-        document.addEventListener('DOMContentLoaded', () => {
-            renderMap();
-            renderTopPages();
-            renderRecentVisitors();
-            renderChart('7d');
-            simulateLiveUpdates();
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Fetch real data first
+            const data = await fetchAnalytics();
             
-            // Try to fetch real data (falls back to sample if API not ready)
-            fetchAnalytics();
-        });
-    </script>
-</body>
+            if (!data) {
+                // Fall back to sample data
+                renderMap();
+                renderTopPages();
+                renderRecentVisitors();
+                renderChart(null, '7d');
+            }
+            
+            // Auto-refresh every 60 seconds
+            setInterval(fetchAnalytics, 60000);
 </html>
