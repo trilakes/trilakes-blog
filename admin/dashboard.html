@@ -971,13 +971,13 @@
             if (data.recentVisitors && data.recentVisitors.length > 0) {
                 const container = document.getElementById('recent-visitors');
                 container.innerHTML = data.recentVisitors.map(v => `
-                    <div class="visitor-item">
+                    <div class="visitor-item" title="${v.ip || ''} | ${v.device || ''} | ${v.browser || ''} | ${v.os || ''}">
                         <span class="visitor-flag">${v.live ? '🟢' : '📍'}</span>
                         <div class="visitor-info">
-                            <div class="visitor-location">${v.city}, CO</div>
-                            <div class="visitor-page">${v.count} visits</div>
+                            <div class="visitor-location">${v.city}${v.region ? ', ' + v.region : ''}</div>
+                            <div class="visitor-page">${v.page ? formatPagePath(v.page) : v.count + ' visits'}</div>
                         </div>
-                        <span class="visitor-time">${v.time || ''}</span>
+                        <span class="visitor-time">${v.time || v.timeAgo || ''}</span>
                     </div>
                 `).join('');
                 
@@ -990,7 +990,31 @@
                     data.recentVisitors.forEach(v => {
                         const icon = v.live ? liveIcon : visitorIcon;
                         const marker = L.marker([v.lat, v.lng], { icon }).addTo(map);
-                        marker.bindPopup(`<strong>${v.city}</strong><br>${v.count} visits`);
+                        
+                        // Rich popup with visitor details
+                        const popupContent = `
+                            <div style="font-family: Inter, sans-serif; min-width: 180px;">
+                                <div style="font-weight: 600; font-size: 14px; margin-bottom: 6px; color: #333;">
+                                    ${v.live ? '🟢' : '📍'} ${v.city}${v.region ? ', ' + v.region : ''}
+                                </div>
+                                <div style="font-size: 12px; color: #666; margin-bottom: 4px;">
+                                    <strong>IP:</strong> ${v.ip || 'unknown'}
+                                </div>
+                                ${v.page ? `<div style="font-size: 12px; color: #666; margin-bottom: 4px;">
+                                    <strong>Page:</strong> ${formatPagePath(v.page)}
+                                </div>` : ''}
+                                ${v.device ? `<div style="font-size: 12px; color: #666; margin-bottom: 4px;">
+                                    <strong>Device:</strong> ${v.device} / ${v.browser || ''} / ${v.os || ''}
+                                </div>` : ''}
+                                ${v.isp ? `<div style="font-size: 12px; color: #666; margin-bottom: 4px;">
+                                    <strong>ISP:</strong> ${v.isp}
+                                </div>` : ''}
+                                <div style="font-size: 11px; color: #999; margin-top: 6px;">
+                                    ${v.time || v.timeAgo || 'Unknown time'}
+                                </div>
+                            </div>
+                        `;
+                        marker.bindPopup(popupContent);
                     });
                 }
             }
@@ -1002,6 +1026,16 @@
             if (data.note) {
                 console.log('Dashboard note:', data.note);
             }
+        }
+        
+        // Helper function to format page paths nicely
+        function formatPagePath(path) {
+            if (!path) return '';
+            return path
+                .replace('/blog/', '')
+                .replace('.html', '')
+                .replace(/-/g, ' ')
+                .substring(0, 30);
         }
         
         // ============================================
