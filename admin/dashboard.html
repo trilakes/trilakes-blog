@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tri-Lakes Analytics Dashboard</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #242424;
+            --bg-hover: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.3);
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .logo-text {
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+        
+        .logo-text span {
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        .refresh-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .refresh-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+        }
+        
+        /* Main Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        /* Map Section */
+        .map-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        
+        .section-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .visitor-count {
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        #map {
+            height: 500px;
+            background: #1a1a2e;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        
+        .stat-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        
+        .stat-card.highlight {
+            grid-column: span 2;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+        
+        .stat-value.large {
+            font-size: 3rem;
+        }
+        
+        .stat-change {
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .stat-change.up {
+            color: var(--success);
+        }
+        
+        .stat-change.down {
+            color: var(--danger);
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        /* Top Pages */
+        .top-pages {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .page-list {
+            padding: 0.5rem;
+        }
+        
+        .page-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .page-item:hover {
+            background: var(--bg-hover);
+        }
+        
+        .page-name {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .page-views {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        /* Recent Visitors */
+        .recent-visitors {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            flex: 1;
+        }
+        
+        .visitor-list {
+            padding: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .visitor-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .visitor-item:hover {
+            background: var(--bg-hover);
+        }
+        
+        .visitor-flag {
+            font-size: 1.25rem;
+        }
+        
+        .visitor-info {
+            flex: 1;
+        }
+        
+        .visitor-location {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+        
+        .visitor-page {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .visitor-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        /* Chart Section */
+        .chart-section {
+            grid-column: span 2;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+        }
+        
+        .chart-container {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            padding-top: 1rem;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--accent), rgba(59, 130, 246, 0.3));
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .chart-bar:hover {
+            background: linear-gradient(to top, #60a5fa, rgba(59, 130, 246, 0.5));
+        }
+        
+        .chart-bar:hover::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+            margin-top: 0.5rem;
+        }
+        
+        .chart-label {
+            font-size: 0.625rem;
+            color: var(--text-muted);
+        }
+        
+        /* Time Filter */
+        .time-filter {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+        
+        /* Leaflet Dark Theme */
+        .leaflet-container {
+            background: #1a1a2e !important;
+        }
+        
+        .leaflet-popup-content-wrapper {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-radius: 8px;
+        }
+        
+        .leaflet-popup-tip {
+            background: var(--bg-card);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card.highlight {
+                grid-column: span 1;
+            }
+            
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-section {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">📊</div>
+            <div class="logo-text">Tri-Lakes <span>Analytics</span></div>
+        </div>
+        <div class="header-right">
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                <span id="live-count">3</span> online now
+            </div>
+            <button class="refresh-btn" onclick="refreshData()">
+                🔄 Refresh
+            </button>
+        </div>
+    </header>
+    
+    <!-- Dashboard -->
+    <main class="dashboard">
+        <!-- Map Section -->
+        <section class="map-section">
+            <div class="section-header">
+                <h2 class="section-title">🗺️ Live Visitor Map</h2>
+                <span class="visitor-count" id="today-map-count">24 today</span>
+            </div>
+            <div id="map"></div>
+        </section>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card highlight">
+                    <div class="stat-label">Total Page Views</div>
+                    <div class="stat-value large" id="total-views">1,247</div>
+                    <div class="stat-change up">
+                        <span>↑</span> 23% from last month
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">Last 24 Hours</div>
+                    <div class="stat-value" id="views-24h">89</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">Last 7 Days</div>
+                    <div class="stat-value" id="views-7d">412</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">Last 30 Days</div>
+                    <div class="stat-value" id="views-30d">1,247</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">Unique Visitors</div>
+                    <div class="stat-value" id="unique-visitors">834</div>
+                </div>
+            </div>
+            
+            <!-- Top Pages -->
+            <section class="top-pages">
+                <div class="section-header">
+                    <h2 class="section-title">🔥 Top Pages</h2>
+                </div>
+                <div class="page-list" id="top-pages">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+            
+            <!-- Recent Visitors -->
+            <section class="recent-visitors">
+                <div class="section-header">
+                    <h2 class="section-title">👥 Recent Visitors</h2>
+                </div>
+                <div class="visitor-list" id="recent-visitors">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+        </aside>
+        
+        <!-- Chart Section -->
+        <section class="chart-section">
+            <div class="section-header" style="padding: 0 0 1rem 0; border: none;">
+                <h2 class="section-title">📈 Traffic Overview</h2>
+                <div class="time-filter">
+                    <button class="filter-btn" onclick="setChartRange('24h')">24H</button>
+                    <button class="filter-btn active" onclick="setChartRange('7d')">7 Days</button>
+                    <button class="filter-btn" onclick="setChartRange('30d')">30 Days</button>
+                </div>
+            </div>
+            <div class="chart-container" id="chart">
+                <!-- Populated by JS -->
+            </div>
+            <div class="chart-labels" id="chart-labels">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+    </main>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const ANALYTICS_API = '/api/analytics'; // Cloudflare Worker endpoint
+        
+        // ============================================
+        // INITIALIZE MAP
+        // ============================================
+        const map = L.map('map', {
+            center: [39.1, -105.5], // Colorado center
+            zoom: 7,
+            zoomControl: true
+        });
+        
+        // Dark map tiles (CartoDB Dark Matter)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Custom marker icon
+        const visitorIcon = L.divIcon({
+            className: 'visitor-marker',
+            html: '<div style="width: 12px; height: 12px; background: #3b82f6; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);"></div>',
+            iconSize: [12, 12],
+            iconAnchor: [6, 6]
+        });
+        
+        const liveIcon = L.divIcon({
+            className: 'live-marker',
+            html: '<div style="width: 16px; height: 16px; background: #22c55e; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 15px rgba(34, 197, 94, 0.7); animation: pulse 2s infinite;"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        });
+        
+        // ============================================
+        // SAMPLE DATA (Replace with API calls)
+        // ============================================
+        const sampleVisitors = [
+            { lat: 39.0639, lng: -105.0372, city: "Woodland Park", page: "/cistern-installation-woodland-park", time: "2 min ago", live: true },
+            { lat: 38.8339, lng: -104.8214, city: "Colorado Springs", page: "/septic-systems-colorado-springs", time: "5 min ago", live: true },
+            { lat: 39.2225, lng: -105.2831, city: "Fairplay", page: "/building-custom-home-fairplay", time: "8 min ago", live: true },
+            { lat: 39.0861, lng: -104.8683, city: "Monument", page: "/excavation-monument-colorado", time: "15 min ago", live: false },
+            { lat: 39.2322, lng: -105.4789, city: "Breckenridge", page: "/cistern-installation-breckenridge", time: "22 min ago", live: false },
+            { lat: 38.7364, lng: -105.0008, city: "Cripple Creek", page: "/septic-installation-cripple-creek", time: "35 min ago", live: false },
+            { lat: 39.6506, lng: -105.8570, city: "Dillon", page: "/custom-homes-summit-county", time: "45 min ago", live: false },
+            { lat: 38.5347, lng: -106.0449, city: "Buena Vista", page: "/land-buying-guide-chaffee", time: "1 hour ago", live: false },
+        ];
+        
+        const sampleTopPages = [
+            { page: "Cistern Installation Colorado", views: 234 },
+            { page: "Septic Cost Calculator", views: 189 },
+            { page: "Building in Teller County", views: 156 },
+            { page: "Woodland Park Excavation", views: 134 },
+            { page: "Well vs Cistern Comparison", views: 98 },
+            { page: "Septic Permit Requirements", views: 87 },
+            { page: "Custom Home 11 Steps", views: 76 },
+        ];
+        
+        const sampleChartData = {
+            '24h': [12, 8, 5, 3, 2, 4, 6, 9, 15, 22, 28, 31, 35, 29, 24, 19, 26, 33, 38, 42, 35, 28, 18, 12],
+            '7d': [89, 124, 98, 145, 167, 203, 178],
+            '30d': [45, 52, 48, 61, 72, 89, 94, 102, 87, 76, 98, 112, 134, 145, 128, 119, 132, 156, 178, 189, 167, 145, 198, 212, 234, 201, 187, 176, 198, 215]
+        };
+        
+        // ============================================
+        // RENDER FUNCTIONS
+        // ============================================
+        function renderMap() {
+            sampleVisitors.forEach(v => {
+                const icon = v.live ? liveIcon : visitorIcon;
+                const marker = L.marker([v.lat, v.lng], { icon }).addTo(map);
+                marker.bindPopup(`
+                    <div style="text-align: center;">
+                        <strong>${v.city}</strong><br>
+                        <small style="color: #a0a0a0;">${v.page}</small><br>
+                        <small style="color: ${v.live ? '#22c55e' : '#666'};">${v.time}</small>
+                    </div>
+                `);
+            });
+        }
+        
+        function renderTopPages() {
+            const container = document.getElementById('top-pages');
+            container.innerHTML = sampleTopPages.map(p => `
+                <div class="page-item">
+                    <span class="page-name">${p.page}</span>
+                    <span class="page-views">${p.views}</span>
+                </div>
+            `).join('');
+        }
+        
+        function renderRecentVisitors() {
+            const container = document.getElementById('recent-visitors');
+            container.innerHTML = sampleVisitors.map(v => `
+                <div class="visitor-item">
+                    <span class="visitor-flag">📍</span>
+                    <div class="visitor-info">
+                        <div class="visitor-location">${v.city}, CO</div>
+                        <div class="visitor-page">${v.page}</div>
+                    </div>
+                    <span class="visitor-time">${v.time}</span>
+                </div>
+            `).join('');
+        }
+        
+        function renderChart(range = '7d') {
+            const data = sampleChartData[range];
+            const maxVal = Math.max(...data);
+            const container = document.getElementById('chart');
+            const labels = document.getElementById('chart-labels');
+            
+            container.innerHTML = data.map(val => {
+                const height = (val / maxVal) * 100;
+                return `<div class="chart-bar" style="height: ${height}%;" data-value="${val} views"></div>`;
+            }).join('');
+            
+            // Generate labels based on range
+            let labelText = [];
+            if (range === '24h') {
+                labelText = ['12am', '6am', '12pm', '6pm', 'Now'];
+            } else if (range === '7d') {
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                const today = new Date().getDay();
+                labelText = Array.from({length: 7}, (_, i) => days[(today - 6 + i + 7) % 7]);
+            } else {
+                labelText = ['30 days ago', '20 days', '10 days', 'Today'];
+            }
+            
+            labels.innerHTML = labelText.map(l => `<span class="chart-label">${l}</span>`).join('');
+        }
+        
+        function setChartRange(range) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderChart(range);
+        }
+        
+        function refreshData() {
+            // In production, this would fetch from your API
+            console.log('Refreshing data...');
+            
+            // Simulate refresh animation
+            const btn = document.querySelector('.refresh-btn');
+            btn.innerHTML = '⏳ Loading...';
+            
+            setTimeout(() => {
+                btn.innerHTML = '🔄 Refresh';
+                // Re-render with potentially new data
+                renderTopPages();
+                renderRecentVisitors();
+                renderChart();
+            }, 1000);
+        }
+        
+        // ============================================
+        // REAL-TIME UPDATES (WebSocket or Polling)
+        // ============================================
+        function simulateLiveUpdates() {
+            setInterval(() => {
+                // Update live count randomly for demo
+                const liveCount = document.getElementById('live-count');
+                const current = parseInt(liveCount.textContent);
+                const change = Math.random() > 0.5 ? 1 : -1;
+                const newCount = Math.max(1, Math.min(10, current + change));
+                liveCount.textContent = newCount;
+            }, 5000);
+        }
+        
+        // ============================================
+        // API FUNCTIONS (Connect to Cloudflare Worker)
+        // ============================================
+        async function fetchAnalytics() {
+            try {
+                const response = await fetch(ANALYTICS_API);
+                if (response.ok) {
+                    const data = await response.json();
+                    updateDashboard(data);
+                }
+            } catch (error) {
+                console.log('Using sample data (API not configured)');
+            }
+        }
+        
+        function updateDashboard(data) {
+            if (data.totalViews) document.getElementById('total-views').textContent = data.totalViews.toLocaleString();
+            if (data.views24h) document.getElementById('views-24h').textContent = data.views24h.toLocaleString();
+            if (data.views7d) document.getElementById('views-7d').textContent = data.views7d.toLocaleString();
+            if (data.views30d) document.getElementById('views-30d').textContent = data.views30d.toLocaleString();
+            if (data.uniqueVisitors) document.getElementById('unique-visitors').textContent = data.uniqueVisitors.toLocaleString();
+        }
+        
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMap();
+            renderTopPages();
+            renderRecentVisitors();
+            renderChart('7d');
+            simulateLiveUpdates();
+            
+            // Try to fetch real data (falls back to sample if API not ready)
+            fetchAnalytics();
+        });
+    </script>
+</body>
+</html>
