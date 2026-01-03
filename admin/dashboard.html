@@ -700,6 +700,8 @@
         // PASSWORD PROTECTION
         // ============================================
         const ADMIN_PASSWORD = '42014201';
+        let map = null;
+        let mapInitialized = false;
         
         // Check if already authenticated (session storage)
         if (sessionStorage.getItem('trilakes_auth') === 'true') {
@@ -713,8 +715,8 @@
                 sessionStorage.setItem('trilakes_auth', 'true');
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('dashboard-content').classList.add('visible');
-                // Initialize map after login
-                setTimeout(() => map.invalidateSize(), 100);
+                // Initialize map after login with delay
+                setTimeout(initializeApp, 200);
             } else {
                 document.getElementById('login-error').style.display = 'block';
                 document.getElementById('password-input').value = '';
@@ -733,35 +735,52 @@
         const ANALYTICS_API = '/api/analytics'; // Cloudflare Worker endpoint
         
         // ============================================
-        // INITIALIZE MAP
+        // INITIALIZE MAP - called after login
         // ============================================
-        const map = L.map('map', {
-            center: [39.1, -105.5], // Colorado center
-            zoom: 7,
-            zoomControl: true
-        });
+        function initMap() {
+            if (mapInitialized) {
+                map.invalidateSize();
+                return;
+            }
+            
+            map = L.map('map', {
+                center: [39.1, -105.5], // Colorado center
+                zoom: 7,
+                zoomControl: true
+            });
+            
+            // Dark map tiles (CartoDB Dark Matter)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+            
+            // Initialize icons
+            initIcons();
+            
+            mapInitialized = true;
+        }
         
-        // Dark map tiles (CartoDB Dark Matter)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(map);
+        // Custom marker icons - will be set after map init
+        let visitorIcon = null;
+        let liveIcon = null;
         
-        // Custom marker icon
-        const visitorIcon = L.divIcon({
-            className: 'visitor-marker',
-            html: '<div style="width: 12px; height: 12px; background: #3b82f6; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);"></div>',
-            iconSize: [12, 12],
-            iconAnchor: [6, 6]
-        });
-        
-        const liveIcon = L.divIcon({
-            className: 'live-marker',
-            html: '<div style="width: 16px; height: 16px; background: #22c55e; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 15px rgba(34, 197, 94, 0.7); animation: pulse 2s infinite;"></div>',
-            iconSize: [16, 16],
-            iconAnchor: [8, 8]
-        });
+        function initIcons() {
+            visitorIcon = L.divIcon({
+                className: 'visitor-marker',
+                html: '<div style="width: 12px; height: 12px; background: #3b82f6; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);"></div>',
+                iconSize: [12, 12],
+                iconAnchor: [6, 6]
+            });
+            
+            liveIcon = L.divIcon({
+                className: 'live-marker',
+                html: '<div style="width: 16px; height: 16px; background: #22c55e; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 15px rgba(34, 197, 94, 0.7); animation: pulse 2s infinite;"></div>',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            });
+        }
         
         // ============================================
         // SAMPLE DATA (Replace with API calls)
@@ -963,15 +982,17 @@
                 `).join('');
                 
                 // Update map with real visitor locations
-                map.eachLayer(layer => {
-                    if (layer instanceof L.Marker) map.removeLayer(layer);
-                });
-                
-                data.recentVisitors.forEach(v => {
-                    const icon = v.live ? liveIcon : visitorIcon;
-                    const marker = L.marker([v.lat, v.lng], { icon }).addTo(map);
-                    marker.bindPopup(`<strong>${v.city}</strong><br>${v.count} visits`);
-                });
+                if (map && mapInitialized) {
+                    map.eachLayer(layer => {
+                        if (layer instanceof L.Marker) map.removeLayer(layer);
+                    });
+                    
+                    data.recentVisitors.forEach(v => {
+                        const icon = v.live ? liveIcon : visitorIcon;
+                        const marker = L.marker([v.lat, v.lng], { icon }).addTo(map);
+                        marker.bindPopup(`<strong>${v.city}</strong><br>${v.count} visits`);
+                    });
+                }
             }
             
             // Update chart
@@ -984,10 +1005,13 @@
         }
         
         // ============================================
-        // INITIALIZE
+        // INITIALIZE APP - called after successful login
         // ============================================
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Fetch real data first
+        async function initializeApp() {
+            // Initialize map first
+            initMap();
+            
+            // Fetch real data
             const data = await fetchAnalytics();
             
             if (!data) {
@@ -1000,6 +1024,16 @@
             
             // Auto-refresh every 60 seconds
             setInterval(fetchAnalytics, 60000);
+        }
+        
+        // ============================================
+        // INITIALIZE ON PAGE LOAD
+        // ============================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            // If already authenticated, initialize immediately
+            if (sessionStorage.getItem('trilakes_auth') === 'true') {
+                setTimeout(initializeApp, 100);
+            }
         });
     </script>
 </body>
