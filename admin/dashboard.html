@@ -511,7 +511,7 @@
         <section class="map-section">
             <div class="section-header">
                 <h2 class="section-title">🗺️ Live Visitor Map</h2>
-                <span class="visitor-count" id="today-map-count">24 today</span>
+                <span class="visitor-count" id="today-map-count">-- today</span>
             </div>
             <div id="map"></div>
         </section>
@@ -522,30 +522,30 @@
             <div class="stats-grid">
                 <div class="stat-card highlight">
                     <div class="stat-label">Total Page Views</div>
-                    <div class="stat-value large" id="total-views">1,247</div>
-                    <div class="stat-change up">
-                        <span>↑</span> 23% from last month
+                    <div class="stat-value large" id="total-views">--</div>
+                    <div class="stat-change up" id="change-indicator">
+                        Loading...
                     </div>
                 </div>
                 
                 <div class="stat-card">
                     <div class="stat-label">Last 24 Hours</div>
-                    <div class="stat-value" id="views-24h">89</div>
+                    <div class="stat-value" id="views-24h">--</div>
                 </div>
                 
                 <div class="stat-card">
                     <div class="stat-label">Last 7 Days</div>
-                    <div class="stat-value" id="views-7d">412</div>
+                    <div class="stat-value" id="views-7d">--</div>
                 </div>
                 
                 <div class="stat-card">
                     <div class="stat-label">Last 30 Days</div>
-                    <div class="stat-value" id="views-30d">1,247</div>
+                    <div class="stat-value" id="views-30d">--</div>
                 </div>
                 
                 <div class="stat-card">
                     <div class="stat-label">Unique Visitors</div>
-                    <div class="stat-value" id="unique-visitors">834</div>
+                    <div class="stat-value" id="unique-visitors">--</div>
                 </div>
             </div>
             
@@ -798,6 +798,10 @@
             if (data.uniqueVisitors !== undefined) document.getElementById('unique-visitors').textContent = data.uniqueVisitors.toLocaleString();
             if (data.liveCount !== undefined) document.getElementById('live-count').textContent = data.liveCount;
             if (data.views24h !== undefined) document.getElementById('today-map-count').textContent = data.views24h + ' today';
+            
+            // Update change indicator
+            const changeEl = document.getElementById('change-indicator');
+            if (changeEl) changeEl.innerHTML = '<span>📊</span> Live data from Cloudflare';
             
             // Update top pages
             if (data.topPages && data.topPages.length > 0) {
