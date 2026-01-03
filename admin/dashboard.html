@@ -698,6 +698,60 @@
                 <!-- Populated by JS -->
             </div>
         </section>
+        
+        <!-- Google Search Console Section -->
+        <section class="chart-section" style="grid-column: span 2;">
+            <div class="section-header" style="padding: 0 0 1rem 0; border: none;">
+                <h2 class="section-title">🔍 Google Search Performance</h2>
+                <a href="https://search.google.com/search-console?resource_id=sc-domain:trilakes.co" target="_blank" class="filter-btn" style="text-decoration: none;">
+                    Open Search Console ↗
+                </a>
+            </div>
+            <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <div class="stat-card">
+                    <div class="stat-label">Total Clicks</div>
+                    <div class="stat-value" id="gsc-clicks">--</div>
+                    <div class="stat-change" style="color: var(--text-secondary);">Last 28 days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Impressions</div>
+                    <div class="stat-value" id="gsc-impressions">--</div>
+                    <div class="stat-change" style="color: var(--text-secondary);">Last 28 days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg CTR</div>
+                    <div class="stat-value" id="gsc-ctr">--%</div>
+                    <div class="stat-change" style="color: var(--text-secondary);">Click-through rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Position</div>
+                    <div class="stat-value" id="gsc-position">--</div>
+                    <div class="stat-change" style="color: var(--text-secondary);">In search results</div>
+                </div>
+            </div>
+            <div class="top-pages" style="margin-top: 1rem;">
+                <div class="section-header">
+                    <h3 class="section-title" style="font-size: 0.9rem;">🎯 Top Search Queries</h3>
+                </div>
+                <div class="page-list" id="gsc-queries">
+                    <div class="page-item" style="opacity: 0.5;">
+                        <span class="page-name">Waiting for Google data...</span>
+                        <span class="page-views">--</span>
+                    </div>
+                </div>
+            </div>
+            <div class="top-pages" style="margin-top: 1rem;">
+                <div class="section-header">
+                    <h3 class="section-title" style="font-size: 0.9rem;">📄 Top Ranking Pages</h3>
+                </div>
+                <div class="page-list" id="gsc-pages">
+                    <div class="page-item" style="opacity: 0.5;">
+                        <span class="page-name">Waiting for Google data...</span>
+                        <span class="page-views">--</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
     
     </div><!-- End dashboard-content -->
