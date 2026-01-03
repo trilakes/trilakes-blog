@@ -1039,25 +1039,110 @@
         }
         
         // ============================================
+        // FETCH REAL VISITORS FROM TRACKING API
+        // ============================================
+        async function fetchRealVisitors() {
+            try {
+                const response = await fetch('/api/visitors');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.visitors && data.visitors.length > 0) {
+                        updateMapWithRealVisitors(data.visitors);
+                        updateRecentVisitorsList(data.visitors);
+                        if (data.liveCount !== undefined) {
+                            document.getElementById('live-count').textContent = data.liveCount;
+                        }
+                    }
+                    return data;
+                }
+            } catch (error) {
+                console.log('Visitors API error:', error);
+            }
+            return null;
+        }
+        
+        function updateMapWithRealVisitors(visitors) {
+            if (!map || !mapInitialized) return;
+            
+            // Clear existing markers
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker) map.removeLayer(layer);
+            });
+            
+            // Add real visitor markers
+            visitors.forEach(v => {
+                if (!v.lat || !v.lng) return;
+                
+                const icon = v.live ? liveIcon : visitorIcon;
+                const marker = L.marker([v.lat, v.lng], { icon }).addTo(map);
+                
+                // Rich popup with all visitor details
+                const popupContent = `
+                    <div style="min-width: 200px; font-family: 'Inter', sans-serif;">
+                        <div style="font-weight: 600; font-size: 14px; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 6px;">
+                            ${v.live ? '🟢' : '📍'} ${v.city || 'Unknown'}${v.region ? ', ' + v.region : ''}
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 4px;">
+                            <strong>IP:</strong> ${v.ipMasked || v.ip || 'unknown'}
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 4px;">
+                            <strong>Page:</strong> ${v.page ? v.page.replace('/blog', '').substring(0, 30) : '/'}
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 4px;">
+                            <strong>Device:</strong> ${v.device || 'Unknown'} / ${v.browser || '?'} / ${v.os || '?'}
+                        </div>
+                        ${v.isp ? `<div style="font-size: 12px; color: #666; margin-bottom: 4px;">
+                            <strong>ISP:</strong> ${v.isp}
+                        </div>` : ''}
+                        <div style="font-size: 11px; color: #999; margin-top: 6px;">
+                            ${v.timeAgo || 'Just now'}
+                        </div>
+                    </div>
+                `;
+                marker.bindPopup(popupContent);
+            });
+        }
+        
+        function updateRecentVisitorsList(visitors) {
+            const container = document.getElementById('recent-visitors');
+            if (!container) return;
+            
+            container.innerHTML = visitors.slice(0, 10).map(v => `
+                <div class="visitor-item">
+                    <span class="visitor-flag">${v.live ? '🟢' : '📍'}</span>
+                    <div class="visitor-info">
+                        <div class="visitor-location">${v.city || 'Unknown'}${v.region ? ', ' + v.region : ''}</div>
+                        <div class="visitor-page">${v.device || 'Desktop'} • ${v.browser || 'Browser'}</div>
+                    </div>
+                    <span class="visitor-time">${v.timeAgo || ''}</span>
+                </div>
+            `).join('');
+        }
+        
+        // ============================================
         // INITIALIZE APP - called after successful login
         // ============================================
         async function initializeApp() {
             // Initialize map first
             initMap();
             
-            // Fetch real data
+            // Fetch real analytics data (Cloudflare)
             const data = await fetchAnalytics();
             
+            // Fetch real visitor tracking data
+            await fetchRealVisitors();
+            
             if (!data) {
-                // Fall back to sample data
-                renderMap();
+                // Fall back to sample data for stats
                 renderTopPages();
-                renderRecentVisitors();
                 renderChart(null, '7d');
             }
             
-            // Auto-refresh every 60 seconds
+            // Auto-refresh analytics every 60 seconds
             setInterval(fetchAnalytics, 60000);
+            
+            // Auto-refresh real visitors every 10 seconds
+            setInterval(fetchRealVisitors, 10000);
         }
         
         // ============================================
