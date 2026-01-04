@@ -1227,6 +1227,9 @@
             // Fetch real visitor tracking data
             await fetchRealVisitors();
             
+            // Fetch Google Search Console data
+            await fetchGSC();
+            
             if (!data) {
                 // Fall back to sample data for stats
                 renderTopPages();
@@ -1238,6 +1241,74 @@
             
             // Auto-refresh real visitors every 10 seconds
             setInterval(fetchRealVisitors, 10000);
+            
+            // Auto-refresh GSC every 5 minutes
+            setInterval(fetchGSC, 300000);
+        }
+        
+        // ============================================
+        // GOOGLE SEARCH CONSOLE DATA
+        // ============================================
+        async function fetchGSC() {
+            try {
+                const response = await fetch('/api/gsc');
+                if (response.ok) {
+                    const data = await response.json();
+                    updateGSCDashboard(data);
+                    return data;
+                }
+            } catch (error) {
+                console.log('GSC API error:', error);
+            }
+            return null;
+        }
+        
+        function updateGSCDashboard(data) {
+            if (!data) return;
+            
+            // Update totals
+            if (data.totals) {
+                document.getElementById('gsc-clicks').textContent = data.totals.clicks.toLocaleString();
+                document.getElementById('gsc-impressions').textContent = data.totals.impressions.toLocaleString();
+                document.getElementById('gsc-ctr').textContent = data.totals.ctr + '%';
+                document.getElementById('gsc-position').textContent = data.totals.position;
+            }
+            
+            // Update top queries
+            const queriesContainer = document.getElementById('gsc-queries');
+            if (data.topQueries && data.topQueries.length > 0) {
+                queriesContainer.innerHTML = data.topQueries.map(q => `
+                    <div class="page-item">
+                        <span class="page-name" title="CTR: ${q.ctr}% | Position: ${q.position}">${q.query}</span>
+                        <span class="page-views">${q.clicks} clicks</span>
+                    </div>
+                `).join('');
+            } else {
+                queriesContainer.innerHTML = `
+                    <div class="page-item" style="opacity: 0.5;">
+                        <span class="page-name">⏳ Data pending (24-48h after sitemap)</span>
+                        <span class="page-views">--</span>
+                    </div>
+                `;
+            }
+            
+            // Update top pages
+            const pagesContainer = document.getElementById('gsc-pages');
+            if (data.topPages && data.topPages.length > 0) {
+                pagesContainer.innerHTML = data.topPages.map(p => `
+                    <div class="page-item">
+                        <span class="page-name" title="CTR: ${p.ctr}% | Position: ${p.position}">${p.page}</span>
+                        <span class="page-views">${p.clicks} clicks</span>
+                    </div>
+                `).join('');
+            } else {
+                pagesContainer.innerHTML = `
+                    <div class="page-item" style="opacity: 0.5;">
+                        <span class="page-name">⏳ Data pending (24-48h after sitemap)</span>
+                        <span class="page-views">--</span>
+                    </div>
+                `;
+            }
         }
         
         // ============================================
