@@ -2712,3 +2712,339 @@ blockquote.expert-tip::before {
     font-size: 0.85rem;
     margin: 0;
 }
+/* ================================
+   MOBILE RESPONSIVE STYLES
+   ================================ */
+
+/* Ensure content fits on all screens */
+html {
+    overflow-x: hidden;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Mobile-first container */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+        max-width: 100%;
+    }
+    
+    /* Header mobile */
+    .site-header {
+        position: sticky;
+        top: 0;
+    }
+    
+    .main-nav {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+    }
+    
+    .logo {
+        font-size: 1.2rem;
+    }
+    
+    .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        margin-top: 12px;
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+    
+    .mobile-menu-btn {
+        display: block !important;
+    }
+    
+    /* Hide mega dropdowns on mobile */
+    .mega-dropdown {
+        display: none !important;
+    }
+    
+    /* Blog hero mobile */
+    .blog-hero {
+        padding: 50px 16px 60px;
+    }
+    
+    .blog-hero h1 {
+        font-size: 1.8rem;
+        word-wrap: break-word;
+    }
+    
+    .blog-hero p {
+        font-size: 1rem;
+    }
+    
+    /* Blog main content mobile */
+    .blog-main {
+        padding: 30px 0;
+    }
+    
+    .blog-header {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+    }
+    
+    .blog-header h1 {
+        font-size: 1.6rem;
+        letter-spacing: 0;
+    }
+    
+    .blog-header p {
+        font-size: 1rem;
+    }
+    
+    /* Post header mobile */
+    .post-header h1 {
+        font-size: 1.5rem !important;
+        line-height: 1.3;
+        word-wrap: break-word;
+    }
+    
+    .post-meta {
+        flex-direction: column;
+        gap: 8px;
+        font-size: 0.85rem;
+    }
+    
+    /* Blog post content mobile */
+    .blog-post {
+        padding: 20px 16px !important;
+        margin: 0 -16px;
+        border-radius: 0;
+    }
+    
+    .post-content {
+        font-size: 1rem;
+    }
+    
+    .post-content h2 {
+        font-size: 1.3rem;
+        margin-top: 1.5rem;
+    }
+    
+    .post-content h3 {
+        font-size: 1.15rem;
+    }
+    
+    .post-content p {
+        margin-bottom: 1rem;
+    }
+    
+    .post-content ul,
+    .post-content ol {
+        padding-left: 20px;
+    }
+    
+    /* CTA box mobile */
+    .cta-box {
+        padding: 20px 16px !important;
+        margin: 20px 0;
+        border-radius: 8px;
+    }
+    
+    .cta-box h3 {
+        font-size: 1.1rem;
+    }
+    
+    .cta-button {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 14px 20px;
+        font-size: 0.9rem;
+    }
+    
+    /* Posts grid mobile */
+    .posts-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+    
+    .post-card {
+        padding: 20px;
+    }
+    
+    /* Featured grid mobile */
+    .featured-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+    }
+    
+    .featured-card {
+        padding: 20px;
+    }
+    
+    /* Section headers mobile */
+    .section-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start !important;
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+    }
+    
+    /* Footer mobile */
+    .site-footer {
+        padding-top: 40px;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 30px;
+    }
+    
+    .footer-brand {
+        padding-right: 0;
+    }
+    
+    .footer-bottom {
+        padding: 20px 0;
+    }
+    
+    /* Breadcrumb mobile */
+    .breadcrumb {
+        font-size: 0.8rem;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 10px;
+    }
+    
+    .breadcrumb ol {
+        flex-wrap: nowrap;
+    }
+    
+    /* Best badge mobile */
+    .best-badge {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+    
+    /* Table responsive */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        font-size: 0.85rem;
+    }
+    
+    /* Towns covered mobile */
+    .towns-covered {
+        padding: 15px;
+    }
+    
+    .town-tags {
+        gap: 6px;
+    }
+    
+    .town-tag {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+    }
+    
+    /* Counties grid mobile */
+    .all-counties-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+    }
+    
+    .all-county-card {
+        padding: 18px;
+    }
+    
+    /* County/service sections mobile */
+    .county-section,
+    .service-section {
+        padding: 15px;
+    }
+    
+    /* Index page categories mobile */
+    .categories-section {
+        padding: 30px 0;
+    }
+    
+    .category-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 12px;
+    }
+    
+    .blog-hero h1 {
+        font-size: 1.5rem;
+    }
+    
+    .post-header h1 {
+        font-size: 1.3rem !important;
+    }
+    
+    .logo {
+        font-size: 1rem;
+    }
+    
+    .nav-cta {
+        font-size: 0.8rem;
+        padding: 8px 16px !important;
+    }
+    
+    .blog-post {
+        padding: 16px 12px !important;
+    }
+    
+    .cta-box {
+        padding: 16px 12px !important;
+    }
+    
+    .post-content h2 {
+        font-size: 1.2rem;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+}
+
+/* Landscape phone fix */
+@media (max-width: 768px) and (orientation: landscape) {
+    .blog-hero {
+        padding: 30px 16px 40px;
+    }
+    
+    .blog-hero h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Fix images on mobile */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Fix iframes on mobile */
+iframe {
+    max-width: 100%;
+}
+
+/* Fix pre/code on mobile */
+pre, code {
+    max-width: 100%;
+    overflow-x: auto;
+    word-wrap: break-word;
+}
