@@ -1636,44 +1636,89 @@ h1, h2, h3, h4, h5, h6 {
     border-top: none;
 }
 
-/* FAQ Accordion */
+/* FAQ Accordion - Full Width Clickable */
 .post-content details {
     background: var(--white);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
 }
 
 .post-content details summary {
-    padding: 18px 20px;
+    padding: 20px 55px 20px 22px;
     font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.4;
     cursor: pointer;
     list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s;
+    position: relative;
+    transition: all 0.25s ease;
+    color: #1a1a1a;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-.post-content details summary::before {
-    content: "+";
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--secondary-color);
-    transition: transform 0.3s;
+/* Hide the default marker/arrow in all browsers */
+.post-content details summary::-webkit-details-marker {
+    display: none;
 }
 
-.post-content details[open] summary::before {
-    transform: rotate(45deg);
+.post-content details summary::marker {
+    display: none;
+    content: "";
+}
+
+/* Custom arrow on the right side */
+.post-content details summary::after {
+    content: "";
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-right: 2.5px solid var(--secondary-color, #c9a227);
+    border-bottom: 2.5px solid var(--secondary-color, #c9a227);
+    transform: translateY(-50%) rotate(45deg);
+    transition: transform 0.25s ease;
+}
+
+.post-content details[open] summary::after {
+    transform: translateY(-25%) rotate(-135deg);
 }
 
 .post-content details summary:hover {
-    background: var(--bg-color);
+    background: linear-gradient(135deg, #faf8f3 0%, #f5f3ed 100%);
 }
 
+.post-content details summary:active {
+    background: #f0ede5;
+}
+
+/* Answer content */
 .post-content details > *:not(summary) {
-    padding: 0 20px 20px;
+    padding: 0 22px 22px;
+    color: #444;
+    line-height: 1.7;
+}
+
+.post-content details > p:first-of-type {
+    padding-top: 5px;
+    border-top: 1px solid #eee;
+    margin-top: 0;
+}
+
+/* Gold accent on open state */
+.post-content details[open] {
+    border-color: var(--secondary-color, #c9a227);
+    box-shadow: 0 3px 10px rgba(201, 162, 39, 0.1);
+}
+
+.post-content details[open] summary {
+    color: var(--secondary-color, #c9a227);
+    background: linear-gradient(135deg, #fffdf7 0%, #faf8f3 100%);
 }
 
 /* Service Area Links in Pillar Pages */
