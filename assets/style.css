@@ -30,6 +30,32 @@
     box-sizing: border-box;
 }
 
+/* Fix SVG sizing for all browsers (Edge/Safari fix) */
+svg {
+    max-width: 100%;
+    height: auto;
+    overflow: visible;
+    flex-shrink: 0;
+}
+
+svg:not([width]):not([height]) {
+    width: 1em;
+    height: 1em;
+}
+
+/* Force icon SVGs to respect container sizing */
+.card-icon svg,
+.topic-icon svg,
+.menu-icon svg,
+.btn-icon svg,
+.search-icon svg,
+.card-link svg {
+    width: inherit;
+    height: inherit;
+    max-width: 28px;
+    max-height: 28px;
+}
+
 body {
     font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.7;
