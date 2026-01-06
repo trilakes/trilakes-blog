@@ -399,9 +399,93 @@
             font-size: 0.85rem;
         }
         
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+        }
+        
+        .mobile-menu-btn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            margin: 6px 0;
+            transition: 0.3s;
+        }
+        
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 6px);
+        }
+        
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -6px);
+        }
+        
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: var(--black);
+            padding: 80px 30px 30px;
+            transition: right 0.3s ease;
+            z-index: 1000;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.3);
+        }
+        
+        .mobile-nav.active {
+            right: 0;
+        }
+        
+        .mobile-nav a {
+            display: block;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .mobile-nav a:hover { color: var(--gold); }
+        
+        .mobile-nav .nav-cta {
+            display: inline-block;
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        
+        .mobile-overlay.active {
+            display: block;
+        }
+        
         /* Mobile */
         @media (max-width: 768px) {
             nav { display: none; }
+            .mobile-menu-btn { display: block; }
+            .mobile-nav { display: block; }
             
             .hero { padding: 50px 20px 70px; }
             .hero h1 { font-size: 1.8rem; }
@@ -454,8 +538,20 @@
                 <a href="/blog">Resources</a>
                 <a href="https://trilakes.co/get-a-quote" class="nav-cta">Get a Quote</a>
             </nav>
+            <button class="mobile-menu-btn" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </header>
+    
+    <div class="mobile-overlay"></div>
+    <nav class="mobile-nav">
+        <a href="https://trilakes.co">Home</a>
+        <a href="/blog">Resources</a>
+        <a href="https://trilakes.co/get-a-quote" class="nav-cta">Get a Quote</a>
+    </nav>
     
     <section class="hero">
         <span class="hero-tag">Expert Resources</span>
@@ -629,6 +725,31 @@
             `<a href="/blog/posts/cistern-installation-${t.toLowerCase().replace(/[^a-z0-9]/g, '-')}-colorado.html" class="search-result">${t}</a>`
         ).join('');
     });
+    </script>
+    
+    <script>
+    // Mobile menu toggle
+    (function() {
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileNav = document.querySelector('.mobile-nav');
+        const overlay = document.querySelector('.mobile-overlay');
+        
+        if (menuBtn && mobileNav && overlay) {
+            menuBtn.addEventListener('click', function() {
+                menuBtn.classList.toggle('active');
+                mobileNav.classList.toggle('active');
+                overlay.classList.toggle('active');
+                document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+            });
+            
+            overlay.addEventListener('click', function() {
+                menuBtn.classList.remove('active');
+                mobileNav.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
+    })();
     </script>
     
     <script>

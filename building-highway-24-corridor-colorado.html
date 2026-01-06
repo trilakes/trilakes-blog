@@ -34,7 +34,16 @@
 </script>
 </head>
 <body>
-    <header class="site-header"><nav class="main-nav"><a href="https://trilakes.co" class="logo">Tri-Lakes Contracting</a><ul class="nav-links"><li><a href="https://trilakes.co">Home</a></li><li><a href="https://trilakes.co/blog" class="active">Blog</a></li><li><a href="https://trilakes.co/get-a-quote" class="nav-cta">Get a Quote</a></li></ul></nav></header>
+    <header class="site-header"><nav class="main-nav"><a href="https://trilakes.co" class="logo">Tri-Lakes Contracting</a><ul class="nav-links"><li><a href="https://trilakes.co">Home</a></li><li><a href="https://trilakes.co/blog" class="active">Blog</a></li><li><a href="https://trilakes.co/get-a-quote" class="nav-cta">Get a Quote</a></li>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('active'); this.classList.toggle('active');">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+        </nav>
+    </header>
     <main class="blog-main"><div class="container"><article class="blog-post"><header class="post-header"><span class="corridor-badge">🛣️ Corridor Guide</span><h1>Building Along Highway 24 Corridor: Divide to Buena Vista</h1><div class="post-meta"><span class="author">By <strong>Kyle Rossignol</strong></span></div></header><div class="post-content">```html
 <!DOCTYPE html>
 <html lang="en">
