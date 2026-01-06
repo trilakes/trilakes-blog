@@ -1430,61 +1430,8 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
 }
 
-/* Related posts */
-.related-posts {
-    margin-top: 50px;
-    padding-top: 40px;
-    border-top: 2px solid var(--border-color);
-}
-
-.related-posts h3 {
-    font-size: 1.4rem;
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-
-.related-posts p {
-    color: var(--text-light);
-    margin-bottom: 20px;
-}
-
-/* Related Articles Grid */
-.related-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.related-card {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    background: var(--white);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.related-card:hover {
-    border-color: var(--secondary-color);
-    box-shadow: 0 5px 20px rgba(201, 162, 39, 0.15);
-    transform: translateY(-2px);
-}
-
-.related-service {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--primary-color);
-    margin-bottom: 5px;
-}
-
-.related-location {
-    font-size: 0.9rem;
-    color: var(--secondary-color);
-}
+/* Related posts - Base styles (enhanced at end of file) */
+/* See ENHANCED RELATED ARTICLES SECTION at bottom */
 
 /* Table of Contents */
 .toc {
@@ -2225,154 +2172,9 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 15px;
 }
 
-/* Cross-Link Section Styles */
-.crosslink-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin: 40px 0;
-    padding: 30px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-}
-
-.crosslink-box {
-    background: var(--white);
-    padding: 20px;
-    border-radius: 8px;
-    border-left: 4px solid var(--secondary-color);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.crosslink-box h4 {
-    font-size: 1rem;
-    color: var(--primary-color);
-    margin-bottom: 10px;
-}
-
-.crosslink-box p {
-    font-size: 0.9rem;
-    margin: 0;
-}
-
-.crosslink-box ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.crosslink-box li {
-    padding: 5px 0;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.crosslink-box li:last-child {
-    border-bottom: none;
-}
-
-.crosslink-box a {
-    color: var(--text-color);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s;
-}
-
-.crosslink-box a:hover {
-    color: var(--secondary-color);
-}
-
-.crosslink-box.service-silo {
-    border-left-color: #2e7d32;
-}
-
-.crosslink-box.county-link {
-    border-left-color: #1565c0;
-}
-
-.crosslink-box.other-services {
-    border-left-color: #ff9800;
-}
-
-.crosslink-box.nearby-towns {
-    border-left-color: #9c27b0;
-}
-
-/* Footer Links Grid */
-.footer-links {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
-    padding: 40px 0;
-    border-top: 1px solid var(--border-color);
-    margin-top: 40px;
-}
-
-.footer-section h5 {
-    color: var(--primary-color);
-    font-size: 0.95rem;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.footer-section ul {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-section li {
-    padding: 6px 0;
-}
-
-.footer-section a {
-    color: var(--text-light);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s;
-}
-
-.footer-section a:hover {
-    color: var(--secondary-color);
-}
-
-/* Related Articles Grid */
-.related-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.related-card {
-    display: block;
-    padding: 15px 20px;
-    background: var(--white);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    text-decoration: none;
-    transition: all 0.3s;
-}
-
-.related-card:hover {
-    border-color: var(--secondary-color);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-}
-
-.related-service {
-    display: block;
-    font-weight: 600;
-    color: var(--primary-color);
-    font-size: 0.95rem;
-}
-
-.related-location {
-    display: block;
-    color: var(--text-light);
-    font-size: 0.85rem;
-    margin-top: 4px;
-}
+/* Cross-Link Section Styles - see ENHANCED CROSSLINK SECTION at bottom */
+/* Footer Links Grid - see ENHANCED FOOTER LINKS GRID at bottom */
+/* Related Articles Grid - see ENHANCED RELATED ARTICLES SECTION at bottom */
 
 /* Construction Phase Badge */
 .construction-badge {
@@ -3191,4 +2993,380 @@ pre, code {
     max-width: 100%;
     overflow-x: auto;
     word-wrap: break-word;
+}
+
+/* ================================
+   ENHANCED RELATED ARTICLES SECTION
+   ================================ */
+.related-posts {
+    margin-top: 60px;
+    padding: 40px;
+    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.related-posts h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.related-posts h3::before {
+    content: "📚";
+    font-size: 1.3rem;
+}
+
+.related-posts > p {
+    color: var(--text-light);
+    font-size: 1rem;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+/* Enhanced Related Articles Grid */
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 0;
+}
+
+.related-card {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.related-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--secondary-color);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.related-card:hover {
+    border-color: var(--secondary-color);
+    box-shadow: 0 8px 30px rgba(201, 162, 39, 0.2);
+    transform: translateY(-4px);
+}
+
+.related-card:hover::before {
+    transform: scaleY(1);
+}
+
+.related-service {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.related-service::before {
+    content: '→';
+    color: var(--secondary-color);
+    font-weight: bold;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.related-card:hover .related-service::before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.related-location {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.related-location::before {
+    content: '📍';
+    font-size: 0.85rem;
+}
+
+/* ================================
+   ENHANCED CROSSLINK SECTION
+   ================================ */
+.crosslink-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin: 50px 0;
+    padding: 40px;
+    background: linear-gradient(145deg, #f8f9fa 0%, #eef1f5 50%, #e8ecf0 100%);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+}
+
+.crosslink-box {
+    background: var(--white);
+    padding: 28px;
+    border-radius: 14px;
+    border-left: 5px solid var(--secondary-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+}
+
+.crosslink-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.crosslink-box h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.crosslink-box p {
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.crosslink-box p a {
+    color: var(--secondary-color);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.crosslink-box p a:hover {
+    border-bottom-color: var(--secondary-color);
+}
+
+.crosslink-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.crosslink-box li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    transition: all 0.3s ease;
+}
+
+.crosslink-box li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.crosslink-box li:hover {
+    padding-left: 8px;
+}
+
+.crosslink-box a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.crosslink-box li a::before {
+    content: '›';
+    color: var(--secondary-color);
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.crosslink-box li:hover a::before {
+    transform: translateX(4px);
+}
+
+.crosslink-box a:hover {
+    color: var(--secondary-color);
+}
+
+/* Colored Left Borders for Different Box Types */
+.crosslink-box.service-silo {
+    border-left-color: #2e7d32;
+}
+
+.crosslink-box.service-silo h4 {
+    color: #2e7d32;
+}
+
+.crosslink-box.county-link {
+    border-left-color: #1565c0;
+}
+
+.crosslink-box.county-link h4 {
+    color: #1565c0;
+}
+
+.crosslink-box.other-services {
+    border-left-color: #e65100;
+}
+
+.crosslink-box.other-services h4 {
+    color: #e65100;
+}
+
+.crosslink-box.nearby-towns {
+    border-left-color: #7b1fa2;
+}
+
+.crosslink-box.nearby-towns h4 {
+    color: #7b1fa2;
+}
+
+/* ================================
+   ENHANCED FOOTER LINKS GRID
+   ================================ */
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 35px;
+    padding: 50px 40px;
+    border-top: 2px solid var(--border-color);
+    margin-top: 50px;
+    background: linear-gradient(180deg, #f9fafb 0%, #ffffff 100%);
+    border-radius: 16px 16px 0 0;
+}
+
+.footer-section h5 {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--primary-color);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--secondary-color);
+    display: inline-block;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section li {
+    padding: 8px 0;
+    transition: all 0.3s ease;
+}
+
+.footer-section li:hover {
+    padding-left: 6px;
+}
+
+.footer-section a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-section a::before {
+    content: '→';
+    color: var(--secondary-color);
+    font-size: 0.8rem;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: var(--secondary-color);
+}
+
+.footer-section a:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Mobile Responsive for Enhanced Sections */
+@media (max-width: 768px) {
+    .related-posts {
+        padding: 25px 20px;
+        margin-top: 40px;
+        border-radius: 12px;
+    }
+    
+    .related-posts h3 {
+        font-size: 1.25rem;
+    }
+    
+    .related-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .related-card {
+        padding: 18px;
+    }
+    
+    .crosslink-section {
+        padding: 25px 20px;
+        gap: 20px;
+        grid-template-columns: 1fr;
+    }
+    
+    .crosslink-box {
+        padding: 20px;
+    }
+    
+    .footer-links {
+        padding: 35px 20px;
+        gap: 25px;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-links {
+        grid-template-columns: 1fr;
+    }
+    
+    .related-posts h3::before {
+        display: none;
+    }
 }
