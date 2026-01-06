@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tri-Lakes Analytics Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-card: #1c1c1c;
+            --bg-hover: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --text-muted: #555555;
+            --accent: #c9a227;
+            --accent-dim: rgba(201, 162, 39, 0.15);
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #2a2a2a;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            font-size: 14px;
+        }
+        
+        /* Login */
+        .login-screen {
+            position: fixed; inset: 0;
+            background: var(--bg-primary);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999;
+        }
+        .login-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%; max-width: 360px;
+            text-align: center;
+        }
+        .login-box h1 { font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--accent); }
+        .login-box p { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.85rem; }
+        .login-input {
+            width: 100%; padding: 0.875rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            text-align: center;
+            letter-spacing: 0.3em;
+            margin-bottom: 1rem;
+        }
+        .login-input:focus { outline: none; border-color: var(--accent); }
+        .login-btn {
+            width: 100%; padding: 0.875rem;
+            background: var(--accent);
+            border: none; border-radius: 8px;
+            color: #000; font-weight: 600;
+            cursor: pointer; transition: opacity 0.2s;
+        }
+        .login-btn:hover { opacity: 0.9; }
+        .login-error { color: var(--danger); font-size: 0.8rem; margin-top: 1rem; display: none; }
+        
+        .dashboard-content { display: none; }
+        .dashboard-content.visible { display: block; }
+        
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { display: flex; align-items: center; gap: 0.5rem; }
+        .logo-icon { font-size: 1.25rem; }
+        .logo-text { font-weight: 600; font-size: 0.95rem; }
+        .logo-text span { color: var(--accent); }
+        .header-right { display: flex; align-items: center; gap: 1rem; }
+        .live-indicator {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 0.35rem 0.75rem;
+            border-radius: 16px; font-size: 0.8rem;
+        }
+        .live-dot {
+            width: 6px; height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .refresh-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px; cursor: pointer;
+            font-size: 0.8rem; transition: all 0.2s;
+        }
+        .refresh-btn:hover { border-color: var(--accent); }
+        
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 1rem;
+            padding: 1rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            min-height: calc(100vh - 50px);
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .card-title {
+            font-size: 0.8rem; font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .card-body { padding: 1rem; }
+        
+        /* Stats Column */
+        .stats-column { display: flex; flex-direction: column; gap: 0.75rem; }
+        .stat-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+        .stat-box.highlight {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+        }
+        .stat-label {
+            font-size: 0.7rem; color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 0.35rem;
+        }
+        .stat-value { font-size: 1.75rem; font-weight: 700; }
+        .stat-box.highlight .stat-value { color: var(--accent); }
+        .stat-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+        
+        /* Main Content */
+        .main-content { display: flex; flex-direction: column; gap: 1rem; }
+        
+        /* Map */
+        #map { height: 450px; background: #0d1117; }
+        .leaflet-container { background: #0d1117 !important; }
+        
+        /* Chart */
+        .chart-container {
+            display: flex; align-items: flex-end;
+            gap: 3px; height: 100px; padding: 0.5rem 0;
+        }
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--accent), rgba(201, 162, 39, 0.3));
+            border-radius: 2px 2px 0 0;
+            min-height: 4px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .chart-bar:hover { opacity: 0.8; }
+        
+        /* Lists */
+        .list-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+        .list-item:last-child { border-bottom: none; }
+        .list-name { 
+            color: var(--text-primary);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            max-width: 180px;
+        }
+        .list-value { color: var(--accent); font-weight: 600; font-size: 0.8rem; }
+        
+        /* Visitors */
+        .visitor-item {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .visitor-item:last-child { border-bottom: none; }
+        .visitor-dot { font-size: 0.7rem; }
+        .visitor-info { flex: 1; min-width: 0; }
+        .visitor-location { font-size: 0.85rem; font-weight: 500; }
+        .visitor-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+        .visitor-time { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; }
+        
+        /* GSC */
+        .gsc-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+        .gsc-stat {
+            background: var(--bg-secondary);
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .gsc-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
+        .gsc-value { font-size: 1.1rem; font-weight: 700; margin-top: 0.25rem; }
+        
+        /* Scrollable */
+        .scrollable { max-height: 200px; overflow-y: auto; }
+        .scrollable::-webkit-scrollbar { width: 4px; }
+        .scrollable::-webkit-scrollbar-track { background: transparent; }
+        .scrollable::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard { grid-template-columns: 1fr 1fr; }
+            .stats-column { grid-row: 1; grid-column: span 2; flex-direction: row; flex-wrap: wrap; }
+            .stat-box { flex: 1; min-width: 150px; }
+        }
+        @media (max-width: 768px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .stats-column { grid-column: 1; }
+            .header { flex-direction: column; gap: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-box">
+            <h1>🔒 Analytics Dashboard</h1>
+            <p>Enter admin password</p>
+            <input type="password" class="login-input" id="password-input" placeholder="••••••••" maxlength="8" autofocus>
+            <button class="login-btn" onclick="checkPassword()">Access Dashboard</button>
+            <div class="login-error" id="login-error">Incorrect password</div>
+        </div>
+    </div>
+    
+    <div class="dashboard-content" id="dashboard-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">📊</span>
+                <span class="logo-text">Tri-Lakes <span>Analytics</span></span>
+            </div>
+            <div class="header-right">
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span id="live-count">0</span> online
+                </div>
+                <button class="refresh-btn" onclick="refreshData()">🔄 Refresh</button>
+            </div>
+        </header>
+        
+        <!-- Dashboard -->
+        <main class="dashboard">
+            <!-- Left: Stats -->
+            <div class="stats-column">
+                <div class="stat-box highlight">
+                    <div class="stat-label">📈 Site Views (24h)</div>
+                    <div class="stat-value" id="total-views">--</div>
+                    <div class="stat-sub">All pages</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">📝 Blog Views</div>
+                    <div class="stat-value" id="blog-views-24h">--</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">👥 Unique</div>
+                    <div class="stat-value" id="unique-visitors">--</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">7 Days</div>
+                    <div class="stat-value" id="views-7d">--</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">30 Days</div>
+                    <div class="stat-value" id="views-30d">--</div>
+                </div>
+            </div>
+            
+            <!-- Center: Map + Chart + GSC -->
+            <div class="main-content">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🗺️ Live Visitors</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);" id="today-map-count">-- today</span>
+                    </div>
+                    <div id="map"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📈 Traffic (30 Days)</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" id="chart"></div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🔍 Google Search Console</span>
+                        <a href="https://search.google.com/search-console?resource_id=sc-domain:trilakes.co" target="_blank" style="font-size: 0.7rem; color: var(--accent); text-decoration: none;">Open ↗</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="gsc-stats">
+                            <div class="gsc-stat">
+                                <div class="gsc-label">Clicks</div>
+                                <div class="gsc-value" id="gsc-clicks">--</div>
+                            </div>
+                            <div class="gsc-stat">
+                                <div class="gsc-label">Impressions</div>
+                                <div class="gsc-value" id="gsc-impressions">--</div>
+                            </div>
+                            <div class="gsc-stat">
+                                <div class="gsc-label">CTR</div>
+                                <div class="gsc-value" id="gsc-ctr">--%</div>
+                            </div>
+                            <div class="gsc-stat">
+                                <div class="gsc-label">Position</div>
+                                <div class="gsc-value" id="gsc-position">--</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <div class="card-title" style="margin-bottom: 0.5rem;">Top Queries</div>
+                            <div class="scrollable" id="gsc-queries" style="max-height: 120px;">
+                                <div class="list-item" style="opacity: 0.5;">
+                                    <span class="list-name">Waiting for data...</span>
+                                    <span class="list-value">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right: Pages + Visitors -->
+            <div class="sidebar-right">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🌐 Top Pages (24h)</span>
+                    </div>
+                    <div class="card-body scrollable" id="all-site-pages">
+                        <div class="list-item"><span class="list-name">Loading...</span><span class="list-value">--</span></div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <span class="card-title">📝 Top Blog Posts</span>
+                    </div>
+                    <div class="card-body scrollable" id="top-pages">
+                        <div class="list-item"><span class="list-name">Loading...</span><span class="list-value">--</span></div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-header">
+                        <span class="card-title">👥 Recent Visitors</span>
+                    </div>
+                    <div class="card-body scrollable" id="recent-visitors" style="max-height: 250px;">
+                        <div class="visitor-item">
+                            <span class="visitor-dot">📍</span>
+                            <div class="visitor-info">
+                                <div class="visitor-location">Waiting...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const ADMIN_PASSWORD = '42014201';
+        let map = null;
+        
+        // Auth check
+        if (sessionStorage.getItem('trilakes_auth') === 'true') {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard-content').classList.add('visible');
+        }
+        
+        function checkPassword() {
+            if (document.getElementById('password-input').value === ADMIN_PASSWORD) {
+                sessionStorage.setItem('trilakes_auth', 'true');
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard-content').classList.add('visible');
+                setTimeout(initializeApp, 100);
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+                document.getElementById('password-input').value = '';
+            }
+        }
+        
+        document.getElementById('password-input').addEventListener('keypress', e => {
+            if (e.key === 'Enter') checkPassword();
+        });
+        
+        function initMap() {
+            if (map) return;
+            map = L.map('map', { center: [39.1, -105.5], zoom: 7, zoomControl: false });
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19
+            }).addTo(map);
+        }
+        
+        async function fetchAnalytics() {
+            try {
+                const res = await fetch('/api/analytics');
+                if (res.ok) {
+                    const data = await res.json();
+                    updateDashboard(data);
+                    return data;
+                }
+            } catch (e) { console.log('API error:', e); }
+        }
+        
+        function updateDashboard(data) {
+            if (data.views24h !== undefined) document.getElementById('total-views').textContent = data.views24h.toLocaleString();
+            if (data.blogViews24h !== undefined) document.getElementById('blog-views-24h').textContent = data.blogViews24h.toLocaleString();
+            if (data.uniqueVisitors !== undefined) document.getElementById('unique-visitors').textContent = data.uniqueVisitors.toLocaleString();
+            if (data.views7d !== undefined) document.getElementById('views-7d').textContent = data.views7d.toLocaleString();
+            if (data.views30d !== undefined) document.getElementById('views-30d').textContent = data.views30d.toLocaleString();
+            if (data.liveCount !== undefined) document.getElementById('live-count').textContent = data.liveCount;
+            if (data.views24h !== undefined) document.getElementById('today-map-count').textContent = data.views24h + ' today';
+            
+            // All site pages
+            if (data.allSitePages && data.allSitePages.length > 0) {
+                document.getElementById('all-site-pages').innerHTML = data.allSitePages.slice(0, 10).map(p => `
+                    <div class="list-item">
+                        <span class="list-name" title="${p.path}">${p.path}</span>
+                        <span class="list-value">${p.views}</span>
+                    </div>
+                `).join('');
+            }
+            
+            // Top blog pages
+            if (data.topPages && data.topPages.length > 0) {
+                document.getElementById('top-pages').innerHTML = data.topPages.slice(0, 8).map(p => `
+                    <div class="list-item">
+                        <span class="list-name">${p.page}</span>
+                        <span class="list-value">${p.views}</span>
+                    </div>
+                `).join('');
+            }
+            
+            // Recent visitors
+            if (data.recentVisitors && data.recentVisitors.length > 0) {
+                document.getElementById('recent-visitors').innerHTML = data.recentVisitors.slice(0, 15).map(v => `
+                    <div class="visitor-item">
+                        <span class="visitor-dot">${v.live ? '🟢' : '📍'}</span>
+                        <div class="visitor-info">
+                            <div class="visitor-location">${v.city || 'Unknown'}${v.region ? ', ' + v.region : ''}</div>
+                            <div class="visitor-meta">${v.device || 'Desktop'} • ${v.browser || ''}</div>
+                        </div>
+                        <span class="visitor-time">${v.time || ''}</span>
+                    </div>
+                `).join('');
+                
+                // Update map markers
+                if (map) {
+                    data.recentVisitors.forEach(v => {
+                        if (v.lat && v.lng) {
+                            const color = v.live ? '#22c55e' : '#c9a227';
+                            L.circleMarker([v.lat, v.lng], {
+                                radius: v.live ? 8 : 5,
+                                fillColor: color,
+                                color: '#fff',
+                                weight: 1,
+                                fillOpacity: 0.8
+                            }).addTo(map).bindPopup(`<b>${v.city}</b><br>${v.page || ''}`);
+                        }
+                    });
+                }
+            }
+            
+            // Chart
+            if (data.chartData && data.chartData.length > 0) {
+                const max = Math.max(...data.chartData.map(d => d.views)) || 1;
+                document.getElementById('chart').innerHTML = data.chartData.map(d => {
+                    const height = Math.max(4, (d.views / max) * 100);
+                    return `<div class="chart-bar" style="height: ${height}%" title="${d.date}: ${d.views}"></div>`;
+                }).join('');
+            }
+        }
+        
+        async function fetchGSC() {
+            try {
+                const res = await fetch('/api/gsc');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.totals) {
+                        document.getElementById('gsc-clicks').textContent = data.totals.clicks.toLocaleString();
+                        document.getElementById('gsc-impressions').textContent = data.totals.impressions.toLocaleString();
+                        document.getElementById('gsc-ctr').textContent = data.totals.ctr + '%';
+                        document.getElementById('gsc-position').textContent = data.totals.position;
+                    }
+                    if (data.topQueries && data.topQueries.length > 0) {
+                        document.getElementById('gsc-queries').innerHTML = data.topQueries.map(q => `
+                            <div class="list-item">
+                                <span class="list-name">${q.query}</span>
+                                <span class="list-value">${q.clicks}</span>
+                            </div>
+                        `).join('');
+                    } else {
+                        document.getElementById('gsc-queries').innerHTML = `
+                            <div class="list-item" style="opacity: 0.5;">
+                                <span class="list-name">⏳ Data pending (24-48h)</span>
+                                <span class="list-value">--</span>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (e) { console.log('GSC error:', e); }
+        }
+        
+        async function refreshData() {
+            const btn = document.querySelector('.refresh-btn');
+            btn.innerHTML = '⏳...';
+            await Promise.all([fetchAnalytics(), fetchGSC()]);
+            btn.innerHTML = '✅ Done';
+            setTimeout(() => btn.innerHTML = '🔄 Refresh', 1500);
+        }
+        
+        async function initializeApp() {
+            initMap();
+            await fetchAnalytics();
+            await fetchGSC();
+            setInterval(fetchAnalytics, 60000);
+            setInterval(fetchGSC, 300000);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('trilakes_auth') === 'true') {
+                setTimeout(initializeApp, 100);
+            }
+        });
+    </script>
+</body>
+</html>

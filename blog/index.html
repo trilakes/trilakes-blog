@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tri-Lakes Contracting blog - Expert articles on construction, septic, cisterns, and building in Colorado's mountains. 590+ guides organized by service and location.">
+    <title>Blog | Tri-Lakes Contracting - Colorado Construction Guides</title>
+    <link rel="canonical" href="https://trilakes.co/blog/">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Colorado Mountain Construction Guides | Tri-Lakes Contracting">
+    <meta property="og:description" content="590+ expert guides on building in Colorado's mountains. Septic, cisterns, excavation, custom homes.">
+    <meta property="og:url" content="https://trilakes.co/blog/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tri-Lakes Contracting">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Colorado Mountain Construction Guides">
+    <meta name="twitter:description" content="590+ expert guides on building in Colorado's mountains.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --black: #0f0f0f;
+            --gold: #c9a227;
+            --gold-light: #e8b923;
+            --white: #ffffff;
+            --gray: #6b6b6b;
+            --bg: #fafafa;
+            --border: #e5e5e5;
+        }
+        
+        body {
+            font-family: 'Open Sans', -apple-system, sans-serif;
+            line-height: 1.6;
+            color: #2d2d2d;
+            background: var(--bg);
+        }
+        
+        h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
+        
+        a { text-decoration: none; color: inherit; }
+        
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header */
+        header {
+            background: var(--black);
+            padding: 18px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+        
+        .logo:hover { color: var(--gold); }
+        
+        nav { display: flex; gap: 30px; align-items: center; }
+        
+        nav a {
+            color: var(--white);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        nav a:hover { color: var(--gold); }
+        
+        .nav-cta {
+            background: linear-gradient(135deg, #b8941f, #e8c84a, #c9a227);
+            color: var(--black) !important;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+        
+        .nav-cta:hover { transform: translateY(-2px); }
+        
+        /* Hero */
+        .hero {
+            background: var(--black);
+            padding: 80px 20px 100px;
+            text-align: center;
+        }
+        
+        .hero-tag {
+            display: inline-block;
+            background: rgba(201, 162, 39, 0.15);
+            color: var(--gold);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(201, 162, 39, 0.3);
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            color: var(--white);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+        
+        .hero h1 span { color: var(--gold); }
+        
+        .hero p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 35px;
+        }
+        
+        .search-box {
+            max-width: 450px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 18px 20px 18px 50px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            outline: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .search-box input:focus { box-shadow: 0 10px 40px rgba(201, 162, 39, 0.3); }
+        
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #999;
+        }
+        
+        #search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            margin-top: 8px;
+            overflow: hidden;
+            z-index: 100;
+        }
+        
+        .search-result {
+            display: block;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            color: #333;
+        }
+        
+        .search-result:hover { background: #f5f5f5; }
+        .search-result:last-child { border-bottom: none; }
+        
+        /* Featured Section */
+        .featured {
+            padding: 70px 0;
+            background: var(--white);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 1.8rem;
+            color: var(--black);
+            margin-bottom: 10px;
+        }
+        
+        .section-title p { color: var(--gray); }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+        }
+        
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px 24px;
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border-color: var(--gold);
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(201, 162, 39, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+        
+        .card-icon svg { width: 24px; height: 24px; }
+        
+        .card h3 {
+            font-size: 1.1rem;
+            color: var(--black);
+            margin-bottom: 10px;
+        }
+        
+        .card p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .card-link {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .card-link svg { width: 16px; height: 16px; }
+        
+        /* Topics Section */
+        .topics {
+            background: #f0f0f0;
+            padding: 70px 0;
+        }
+        
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .topic-box {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .topic-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .topic-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--black);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+        }
+        
+        .topic-icon svg { width: 18px; height: 18px; }
+        
+        .topic-box h4 {
+            font-size: 0.95rem;
+            color: var(--black);
+        }
+        
+        .topic-box ul { list-style: none; }
+        
+        .topic-box li { margin-bottom: 10px; }
+        
+        .topic-box a {
+            color: #555;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .topic-box a:hover { color: var(--gold); }
+        
+        /* CTA */
+        .cta {
+            background: var(--black);
+            padding: 80px 20px;
+            text-align: center;
+        }
+        
+        .cta h2 {
+            color: var(--white);
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+        
+        .cta p {
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #b8941f, #e8c84a, #c9a227);
+            color: var(--black);
+            padding: 16px 40px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(201, 162, 39, 0.4);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--black);
+            color: var(--white);
+            padding: 60px 0 30px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .footer-brand p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        footer h4 {
+            color: var(--gold);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+        }
+        
+        footer ul { list-style: none; }
+        footer li { margin-bottom: 12px; }
+        
+        footer a {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+        
+        footer a:hover { color: var(--white); }
+        
+        .footer-bottom {
+            padding-top: 25px;
+            text-align: center;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+        }
+        
+        .mobile-menu-btn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            margin: 6px 0;
+            transition: 0.3s;
+        }
+        
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 6px);
+        }
+        
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -6px);
+        }
+        
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: var(--black);
+            padding: 80px 30px 30px;
+            transition: right 0.3s ease;
+            z-index: 1000;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.3);
+        }
+        
+        .mobile-nav.active {
+            right: 0;
+        }
+        
+        .mobile-nav a {
+            display: block;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .mobile-nav a:hover { color: var(--gold); }
+        
+        .mobile-nav .nav-cta {
+            display: inline-block;
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        
+        .mobile-overlay.active {
+            display: block;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .mobile-menu-btn { display: block; }
+            .mobile-nav { display: block; }
+            
+            .hero { padding: 50px 20px 70px; }
+            .hero h1 { font-size: 1.8rem; }
+            
+            .featured, .topics { padding: 50px 0; }
+            
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .footer-grid { grid-template-columns: 1fr; }
+            .cards-grid, .topics-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://trilakes.co"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://trilakes.co/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Blog"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <a href="https://trilakes.co" class="logo">Tri-Lakes Contracting</a>
+            <nav>
+                <a href="https://trilakes.co">Home</a>
+                <a href="/blog">Resources</a>
+                <a href="https://trilakes.co/get-a-quote" class="nav-cta">Get a Quote</a>
+            </nav>
+            <button class="mobile-menu-btn" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+    
+    <div class="mobile-overlay"></div>
+    <nav class="mobile-nav">
+        <a href="https://trilakes.co">Home</a>
+        <a href="/blog">Resources</a>
+        <a href="https://trilakes.co/get-a-quote" class="nav-cta">Get a Quote</a>
+    </nav>
+    
+    <section class="hero">
+        <span class="hero-tag">Expert Resources</span>
+        <h1>Colorado Mountain<br><span>Construction Guides</span></h1>
+        <p>590+ in-depth articles on building in Colorado's high country</p>
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="location-search" placeholder="Search your town...">
+            <div id="search-results"></div>
+        </div>
+    </section>
+    
+    <section class="featured">
+        <div class="container">
+            <div class="section-title">
+                <h2>Complete Guides</h2>
+                <p>Comprehensive resources for every stage of your project</p>
+            </div>
+            <div class="cards-grid">
+                <a href="/blog/cistern-installation-colorado-guide.html" class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                    </div>
+                    <h3>Cistern Installation</h3>
+                    <p>Complete water storage guide for off-grid Colorado properties</p>
+                    <span class="card-link">Read Guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                </a>
+                <a href="/blog/septic-installation-colorado-guide.html" class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                    </div>
+                    <h3>Septic Systems</h3>
+                    <p>Everything about septic installation in mountain terrain</p>
+                    <span class="card-link">Read Guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                </a>
+                <a href="/blog/building-mountain-home-colorado-guide.html" class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    </div>
+                    <h3>Building a Mountain Home</h3>
+                    <p>Ground-up custom home construction guide</p>
+                    <span class="card-link">Read Guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                </a>
+                <a href="/blog/buying-land-colorado-guide.html" class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M9 8h1M9 12h1M9 16h1M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>
+                    </div>
+                    <h3>Buying Land Guide</h3>
+                    <p>Essential due diligence for Colorado land purchases</p>
+                    <span class="card-link">Read Guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                </a>
+                <a href="/blog/excavation-guide-colorado.html" class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M5 20v-6l3-3 4 4 4-4 3 3v6"/></svg>
+                    </div>
+                    <h3>Excavation Guide</h3>
+                    <p>Complete site prep, grading, and excavation guide</p>
+                    <span class="card-link">Read Guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                </a>
+                <a href="/blog/colorado-permits-guide.html" class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <h3>Colorado Permits Guide</h3>
+                    <p>Navigate building permits by county</p>
+                    <span class="card-link">Read Guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                </a>
+                <a href="/blog/colorado-construction-costs-guide.html" class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <h3>Construction Costs 2026</h3>
+                    <p>Complete cost breakdown for mountain building</p>
+                    <span class="card-link">Read Guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="topics">
+        <div class="container">
+            <div class="section-title">
+                <h2>Browse by Topic</h2>
+                <p>Find exactly what you need</p>
+            </div>
+            <div class="topics-grid">
+                <div class="topic-box">
+                    <div class="topic-header">
+                        <span class="topic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                        <h4>Cost Guides</h4>
+                    </div>
+                    <ul>
+                        <li><a href="/blog/cistern-installation-cost-2026.html">Cistern Costs 2026</a></li>
+                        <li><a href="/blog/septic-installation-cost-2026.html">Septic Costs 2026</a></li>
+                        <li><a href="/blog/excavation-cost-2026.html">Excavation Costs 2026</a></li>
+                        <li><a href="/blog/home-building-cost-colorado-2026.html">Custom Home Costs 2026</a></li>
+                    </ul>
+                </div>
+                <div class="topic-box">
+                    <div class="topic-header">
+                        <span class="topic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+                        <h4>Permits & Regulations</h4>
+                    </div>
+                    <ul>
+                        <li><a href="/blog/counties/teller-county.html">Teller County Permits</a></li>
+                        <li><a href="/blog/counties/park-county.html">Park County Permits</a></li>
+                        <li><a href="/blog/counties/el-paso-county.html">El Paso County Permits</a></li>
+                        <li><a href="/blog/permits-summit-county-colorado.html">Summit County Permits</a></li>
+                    </ul>
+                </div>
+                <div class="topic-box">
+                    <div class="topic-header">
+                        <span class="topic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                        <h4>Luxury Markets</h4>
+                    </div>
+                    <ul>
+                        <li><a href="/blog/luxury-custom-homes-aspen-pitkin-county.html">Aspen & Pitkin County</a></li>
+                        <li><a href="/blog/luxury-custom-homes-vail-eagle-county.html">Vail & Eagle County</a></li>
+                        <li><a href="/blog/luxury-custom-homes-breckenridge-summit-county.html">Breckenridge</a></li>
+                        <li><a href="/blog/luxury-custom-homes-crested-butte-gunnison-county.html">Crested Butte</a></li>
+                    </ul>
+                </div>
+                <div class="topic-box">
+                    <div class="topic-header">
+                        <span class="topic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+                        <h4>Building Phases</h4>
+                    </div>
+                    <ul>
+                        <li><a href="/blog/site-preparation-earthwork-colorado.html">Site Preparation</a></li>
+                        <li><a href="/blog/foundation-excavation-mountain-homes-colorado.html">Foundation Work</a></li>
+                        <li><a href="/blog/framing-structural-mountain-homes-colorado.html">Framing & Structural</a></li>
+                        <li><a href="/blog/roofing-dry-in-colorado-custom-homes.html">Roofing & Dry-In</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta">
+        <h2>Ready to Start Your Project?</h2>
+        <p>We serve 16 counties across Colorado's mountain region. Get a free consultation today.</p>
+        <a href="https://trilakes.co/get-a-quote" class="cta-btn">Get a Free Quote</a>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="https://trilakes.co" class="logo">Tri-Lakes Contracting</a>
+                    <p>Expert construction services for Colorado's mountain communities since 2005.</p>
+                </div>
+                <div>
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="/blog/services/cistern-installation.html">Cistern Installation</a></li>
+                        <li><a href="/blog/services/septic-system-installation.html">Septic Systems</a></li>
+                        <li><a href="/blog/services/excavation-services.html">Excavation</a></li>
+                        <li><a href="/blog/services/custom-home-construction.html">Custom Homes</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Service Areas</h4>
+                    <ul>
+                        <li><a href="/blog/counties/teller-county.html">Teller County</a></li>
+                        <li><a href="/blog/counties/park-county.html">Park County</a></li>
+                        <li><a href="/blog/counties/el-paso-county.html">El Paso County</a></li>
+                        <li><a href="/blog/all-counties.html">All 16 Counties</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="https://trilakes.co">Home</a></li>
+                        <li><a href="https://trilakes.co/about">About Us</a></li>
+                        <li><a href="https://trilakes.co/get-a-quote">Get a Quote</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Tri-Lakes Contracting. Serving Colorado's mountain communities.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+    const towns = ["Woodland Park", "Divide", "Cripple Creek", "Victor", "Florissant", "Green Mountain Falls", "Chipita Park", "Cascade", "Crystola", "Goldfield", "Midland", "Fairplay", "Bailey", "Hartsel", "Alma", "Como", "Guffey", "Lake George", "Jefferson", "Colorado Springs", "Monument", "Palmer Lake", "Black Forest", "Fountain", "Peyton", "Falcon", "Manitou Springs", "Canon City", "Florence", "Penrose", "Buena Vista", "Salida", "Poncha Springs", "Castle Rock", "Sedalia", "Larkspur", "Highlands Ranch", "Parker", "Breckenridge", "Frisco", "Silverthorne", "Dillon", "Keystone", "Conifer", "Evergreen", "Pine", "Morrison", "Leadville", "Twin Lakes", "Idaho Springs", "Georgetown", "Vail", "Avon", "Eagle", "Edwards", "Granby", "Winter Park", "Grand Lake", "Fraser", "Westcliffe", "Crestone", "Gunnison", "Crested Butte", "Aspen", "Snowmass Village", "Basalt"];
+    const searchInput = document.getElementById('location-search');
+    const resultsDiv = document.getElementById('search-results');
+    
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        if (query.length < 2) { resultsDiv.innerHTML = ''; return; }
+        const matches = towns.filter(t => t.toLowerCase().includes(query)).slice(0, 6);
+        resultsDiv.innerHTML = matches.map(t => 
+            `<a href="/blog/posts/cistern-installation-${t.toLowerCase().replace(/[^a-z0-9]/g, '-')}-colorado.html" class="search-result">${t}</a>`
+        ).join('');
+    });
+    </script>
+    
+    <script>
+    // Mobile menu toggle
+    (function() {
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileNav = document.querySelector('.mobile-nav');
+        const overlay = document.querySelector('.mobile-overlay');
+        
+        if (menuBtn && mobileNav && overlay) {
+            menuBtn.addEventListener('click', function() {
+                menuBtn.classList.toggle('active');
+                mobileNav.classList.toggle('active');
+                overlay.classList.toggle('active');
+                document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+            });
+            
+            overlay.addEventListener('click', function() {
+                menuBtn.classList.remove('active');
+                mobileNav.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
+    })();
+    </script>
+    
+    <script>
+        (function(){var i=new Image();i.src="https://trilakes.co/t.gif?p="+encodeURIComponent(window.location.pathname)+"&r="+encodeURIComponent(document.referrer);})();
+    </script>
+    
+    <script>
+        (function(){
+            try {
+                var data = { page: window.location.pathname, title: document.title, referrer: document.referrer, screen: window.screen.width + 'x' + window.screen.height, ts: Date.now() };
+                if (navigator.sendBeacon) { navigator.sendBeacon('/api/track', JSON.stringify(data)); }
+            } catch(e) {}
+        })();
+    </script>
+</body>
+</html>
