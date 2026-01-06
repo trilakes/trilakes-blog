@@ -1216,9 +1216,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* CTA Box */
-.cta-box {
-    background: var(--primary-color);
-    color: var(--white);
+.cta-box { background: #fafafa; color: #1a1a1a; border: 3px solid #c9a227;
     padding: 50px 60px;
     border-radius: 0;
     text-align: center;
@@ -1249,16 +1247,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .cta-box h3 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    color: #c9a227;
+    letter-spacing: 1px;
 }
 
-.cta-box p {
-    font-size: 1.15rem;
-    margin-bottom: 30px;
-    opacity: 0.9;
+.cta-box p { font-size: 1.1rem; margin-bottom: 25px; color: #333;
 }
 
 .cta-button {
@@ -4904,14 +4899,12 @@ button:focus-visible {
     background: linear-gradient(90deg, var(--secondary-color), var(--accent-color), var(--secondary-color));
 }
 
-.pillar-page .cta-box h3 {
-    color: var(--white);
+.pillar-page .cta-box h3 { color: #c9a227;
     font-size: 1.5rem;
     margin-bottom: 15px;
 }
 
-.pillar-page .cta-box p {
-    color: rgba(255,255,255,0.8);
+.pillar-page .cta-box p { color: #333;
     font-size: 1.1rem;
     margin-bottom: 15px;
 }
