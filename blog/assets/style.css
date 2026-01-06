@@ -4543,3 +4543,468 @@ button:focus-visible {
         font-size: 0.85rem;
     }
 }
+
+/* ================================
+   ENHANCED FAQ SECTION STYLING
+   ================================ */
+
+/* FAQ Section Header - special treatment for FAQ h2 */
+.post-content h2#faq {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #2a2a2a 100%);
+    color: var(--white);
+    margin: 60px -30px 30px -30px;
+    padding: 30px 30px;
+    border-top: none;
+    border-radius: 12px 12px 0 0;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.post-content h2#faq::before {
+    content: "❓";
+    font-size: 1.4rem;
+}
+
+/* FAQ Container - wrap all details after FAQ heading */
+.post-content h2#faq ~ details {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 0;
+    border-left: 3px solid var(--secondary-color);
+}
+
+.post-content h2#faq ~ details:first-of-type {
+    border-radius: 0;
+}
+
+.post-content h2#faq ~ details:last-of-type {
+    border-radius: 0 0 12px 12px;
+    margin-bottom: 40px;
+}
+
+/* Enhanced details/summary for FAQs */
+.post-content details {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+}
+
+.post-content details:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.post-content details summary {
+    padding: 22px 60px 22px 25px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    transition: all 0.25s ease;
+    color: var(--primary-color);
+    -webkit-user-select: none;
+    user-select: none;
+    background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+}
+
+.post-content details summary::before {
+    content: "Q.";
+    color: var(--secondary-color);
+    font-weight: 700;
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+
+/* Custom arrow - refined */
+.post-content details summary::after {
+    content: "";
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    border-right: 2.5px solid var(--secondary-color);
+    border-bottom: 2.5px solid var(--secondary-color);
+    transform: translateY(-60%) rotate(45deg);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.post-content details[open] summary::after {
+    transform: translateY(-30%) rotate(-135deg);
+}
+
+.post-content details summary:hover {
+    background: linear-gradient(135deg, #f5f4f0 0%, #faf9f5 100%);
+}
+
+/* Answer content styling */
+.post-content details > *:not(summary) {
+    padding: 0 25px 25px;
+    color: var(--text-color);
+    line-height: 1.8;
+}
+
+/* When the answer is just text (no wrapping p tag) */
+.post-content details:not(:has(> p)) {
+    /* This adds padding for text-only answers */
+}
+
+/* Style the first paragraph or text after summary */
+.post-content details > p:first-of-type,
+.post-content details > :not(summary):first-of-type {
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    margin-top: 0;
+}
+
+/* Open state - elegant gold accent */
+.post-content details[open] {
+    border-color: var(--secondary-color);
+    box-shadow: 0 6px 20px rgba(201, 162, 39, 0.12);
+}
+
+.post-content details[open] summary {
+    color: var(--secondary-color);
+    background: linear-gradient(135deg, #fffef8 0%, #fdfbf5 100%);
+    border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+}
+
+/* ================================
+   PILLAR PAGE LAYOUT ENHANCEMENTS
+   ================================ */
+
+/* Section headers with icons */
+.pillar-page .post-content h2#overview::before { content: "📖 "; }
+.pillar-page .post-content h2#costs::before { content: "💰 "; }
+.pillar-page .post-content h2#process::before { content: "🔧 "; }
+.pillar-page .post-content h2#colorado-challenges::before { content: "⛰️ "; }
+.pillar-page .post-content h2#permits::before { content: "📋 "; }
+.pillar-page .post-content h2#timeline::before { content: "⏱️ "; }
+.pillar-page .post-content h2#choosing-contractor::before { content: "👷 "; }
+.pillar-page .post-content h2#service-areas::before { content: "📍 "; }
+.pillar-page .post-content h2#related::before { content: "🔗 "; }
+
+/* Better heading spacing */
+.pillar-page .post-content h2 {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 2px solid var(--border-color);
+    font-size: 1.75rem;
+    color: var(--primary-color);
+    position: relative;
+}
+
+.pillar-page .post-content h2:first-of-type {
+    margin-top: 30px;
+    padding-top: 0;
+    border-top: none;
+}
+
+/* Section intro paragraphs - larger first paragraph after h2 */
+.pillar-page .post-content h2 + p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #444;
+}
+
+/* Enhanced blockquotes for tips */
+.pillar-page .post-content blockquote {
+    background: linear-gradient(135deg, #fffdf7 0%, #faf8f3 100%);
+    border-left: 5px solid var(--secondary-color);
+    border-radius: 0 12px 12px 0;
+    padding: 25px 30px;
+    margin: 30px 0;
+    font-style: normal;
+    position: relative;
+}
+
+.pillar-page .post-content blockquote::before {
+    content: "💡";
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--white);
+    padding: 8px;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Enhanced tables */
+.pillar-page .post-content table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 30px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.pillar-page .post-content th {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #2a2a2a 100%);
+    color: var(--white);
+    font-weight: 600;
+    padding: 16px 20px;
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.pillar-page .post-content td {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--white);
+}
+
+.pillar-page .post-content tr:last-child td {
+    border-bottom: none;
+}
+
+.pillar-page .post-content tr:hover td {
+    background: #fafafa;
+}
+
+/* Enhanced ordered lists for process steps */
+.pillar-page .post-content ol {
+    counter-reset: step-counter;
+    list-style: none;
+    padding: 0;
+    margin: 30px 0;
+}
+
+.pillar-page .post-content ol li {
+    position: relative;
+    padding: 20px 20px 20px 75px;
+    margin-bottom: 15px;
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    counter-increment: step-counter;
+    transition: all 0.3s ease;
+}
+
+.pillar-page .post-content ol li:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border-color: var(--secondary-color);
+}
+
+.pillar-page .post-content ol li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+}
+
+/* Enhanced unordered lists */
+.pillar-page .post-content ul:not(.toc ul):not(.nav-links) {
+    list-style: none;
+    padding: 0;
+    margin: 25px 0;
+}
+
+.pillar-page .post-content ul:not(.toc ul):not(.nav-links) li {
+    position: relative;
+    padding: 12px 0 12px 35px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.pillar-page .post-content ul:not(.toc ul):not(.nav-links) li:last-child {
+    border-bottom: none;
+}
+
+.pillar-page .post-content ul:not(.toc ul):not(.nav-links) li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    color: var(--secondary-color);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* Related guides section */
+.pillar-page .post-content h2#related + p + ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    padding: 0;
+    margin: 25px 0;
+}
+
+.pillar-page .post-content h2#related + p + ul li {
+    padding: 0;
+    border: none;
+}
+
+.pillar-page .post-content h2#related + p + ul li::before {
+    display: none;
+}
+
+.pillar-page .post-content h2#related + p + ul a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 22px;
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.pillar-page .post-content h2#related + p + ul a::before {
+    content: "📄";
+    font-size: 1.2rem;
+}
+
+.pillar-page .post-content h2#related + p + ul a:hover {
+    border-color: var(--secondary-color);
+    background: linear-gradient(135deg, #fffdf7 0%, #ffffff 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(201, 162, 39, 0.15);
+}
+
+/* CTA Box improvements */
+.pillar-page .cta-box {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1a1a1a 100%);
+    border-radius: 16px;
+    padding: 40px;
+    margin: 50px 0 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.pillar-page .cta-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--accent-color), var(--secondary-color));
+}
+
+.pillar-page .cta-box h3 {
+    color: var(--white);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.pillar-page .cta-box p {
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.pillar-page .cta-box a[href^="tel"] {
+    color: var(--secondary-color);
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.pillar-page .cta-box .cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    color: var(--primary-color);
+    padding: 16px 40px;
+    border-radius: 30px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(201, 162, 39, 0.4);
+}
+
+.pillar-page .cta-box .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(201, 162, 39, 0.5);
+}
+
+/* Mobile responsive for pillar pages */
+@media (max-width: 768px) {
+    .post-content h2#faq {
+        margin: 40px -20px 20px -20px;
+        padding: 25px 20px;
+        font-size: 1.3rem;
+        border-radius: 10px 10px 0 0;
+    }
+    
+    .post-content details summary {
+        padding: 18px 50px 18px 20px;
+        font-size: 0.95rem;
+    }
+    
+    .post-content details summary::before {
+        font-size: 1rem;
+    }
+    
+    .post-content details > *:not(summary) {
+        padding: 0 20px 20px;
+    }
+    
+    .pillar-page .post-content h2 {
+        font-size: 1.4rem;
+        margin-top: 40px;
+        padding-top: 30px;
+    }
+    
+    .pillar-page .post-content blockquote {
+        padding: 20px 20px 20px 25px;
+        margin: 25px 0;
+    }
+    
+    .pillar-page .post-content blockquote::before {
+        left: -15px;
+        padding: 5px;
+        font-size: 0.9rem;
+    }
+    
+    .pillar-page .post-content ol li {
+        padding: 18px 15px 18px 60px;
+    }
+    
+    .pillar-page .post-content ol li::before {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+        left: 12px;
+    }
+    
+    .pillar-page .cta-box {
+        padding: 30px 25px;
+        margin: 40px 0 20px;
+    }
+    
+    .pillar-page .cta-box h3 {
+        font-size: 1.3rem;
+    }
+    
+    .pillar-page .post-content h2#related + p + ul {
+        grid-template-columns: 1fr;
+    }
+}
