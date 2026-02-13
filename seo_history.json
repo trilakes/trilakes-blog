@@ -1,0 +1,24 @@
+{
+  "reports": [
+    {
+      "date": "2026-02-12",
+      "period": "2026-02-02 to 2026-02-09",
+      "clicks": 18,
+      "impressions": 973,
+      "ctr": 1.85,
+      "position": 13.2,
+      "pages_visible": 128,
+      "visibility_pct": 10.5
+    },
+    {
+      "date": "2026-02-12",
+      "period": "2026-02-02 to 2026-02-09",
+      "clicks": 18,
+      "impressions": 973,
+      "ctr": 1.85,
+      "position": 13.2,
+      "pages_visible": 128,
+      "visibility_pct": 10.5
+    }
+  ]
+}
